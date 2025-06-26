@@ -9,11 +9,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { User, UserSchema } from '../user/schemas/user.schema'
 import { JwtStrategy } from './strategies/jwt.strategy'
+import { RoleModule } from '../role/role.module'
 
 @Module({
   imports: [
     PassportModule,
     ConfigModule,
+    RoleModule,
     // Import User schema để có thể inject vào service
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     JwtModule.registerAsync({

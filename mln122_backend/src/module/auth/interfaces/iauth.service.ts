@@ -5,7 +5,6 @@
  */
 export interface LoginResponseDto {
   accessToken: string
-  refreshToken: string
   // Bạn có thể thêm thông tin người dùng nếu cần
   // user: { id: string; email: string; fullName: string; picture?: string; }
 }

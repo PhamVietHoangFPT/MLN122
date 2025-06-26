@@ -1,6 +1,6 @@
 // src/user/schema/user.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument } from 'mongoose'
+import mongoose, { HydratedDocument } from 'mongoose'
 import { BaseEntity } from 'src/common/schema/baseEntity.schema'
 
 export type UserDocument = HydratedDocument<User>
@@ -28,6 +28,9 @@ export class User extends BaseEntity {
 
   @Prop({ type: String, required: false })
   picture?: string // Lưu URL ảnh đại diện từ Google
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, required: false })
+  role?: mongoose.Schema.Types.ObjectId // Tham chiếu đến Role nếu cần
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

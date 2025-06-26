@@ -4,6 +4,9 @@ import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { Response } from 'express'
 import { ApiBearerAuth } from '@nestjs/swagger'
+import { RoleEnum } from 'src/common/enums/role.enum'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { RolesGuard } from 'src/common/guard/roles.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +33,8 @@ export class AuthController {
 
   @Get('test')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   testAuth(@Req() req) {
     // Đây là route chỉ cho phép người dùng đã đăng nhập qua JWT mới truy cập
     return { message: 'Bạn đã đăng nhập thành công!', user: req.user }

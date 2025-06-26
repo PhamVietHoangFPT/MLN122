@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach", // Quan trọng: là attach
+      "name": "Attach NestJS WS",
+      "address": "localhost",
+      "port": 9229,        // Port mà ứng dụng đang lắng nghe debugger
+      "restart": true,     // Tự động kết nối lại nếu tiến trình khởi động lại (do --watch)
+      "sourceMaps": true,  // Để map từ JS đã biên dịch về TS gốc
+      "outFiles": ["${workspaceFolder}/mln122_backend/dist/**/*.js"], // Đường dẫn tới file JS đã biên dịch
+      "localRoot": "${workspaceFolder}/mln122_backend",
+      "remoteRoot": "${workspaceFolder}/mln122_backend", // Nếu chạy trên máy cục bộ
+    }
+    // Các cấu hình khác có thể ở đây
+  ]
+}
