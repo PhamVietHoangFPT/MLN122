@@ -1,5 +1,12 @@
 // src/auth/auth.controller.ts
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common'
+import {
+  Controller,
+  ForbiddenException,
+  Get,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { AuthService } from './auth.service'
 import { Response } from 'express'
@@ -14,21 +21,38 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {
+  async googleAuth() {
     // Guard sẽ tự động redirect tới trang đăng nhập Google
   }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
-    const { accessToken } = await this.authService.signInWithGoogle(req.user)
+    try {
+      // --- LUỒNG THÀNH CÔNG ---
+      // Thử thực hiện đăng nhập
+      const { accessToken } = await this.authService.signInWithGoogle(req.user)
 
-    // Tùy chọn 1: Redirect về frontend với token trong query param
-    // Đây là cách phổ biến cho web application
-    res.redirect(`http://localhost:5173/login-success?token=${accessToken}`)
+      // Nếu thành công, chuyển hướng về trang success với token
+      res.redirect(`http://localhost:5173/login-success?token=${accessToken}`)
+    } catch (error) {
+      // --- LUỒNG THẤT BẠI ---
+      // Bắt lỗi nếu signInWithGoogle ném ra một Exception
 
-    // Tùy chọn 2: Trả về JSON (nếu client là mobile app chẳng hạn)
-    // return { accessToken };
+      // Mặc định chuyển hướng về trang failure
+      let redirectUrl = 'http://localhost:5173/login?error=UnknownError'
+
+      if (error instanceof ForbiddenException) {
+        // Nếu là lỗi do sai domain email mà chúng ta đã định nghĩa
+        const errorMessage = error.message
+        // Rất quan trọng: Mã hóa message để nó trở thành một phần hợp lệ của URL
+        const encodedMessage = encodeURIComponent(errorMessage)
+        redirectUrl = `http://localhost:5173/login?error=${encodedMessage}`
+      }
+
+      // Chuyển hướng về frontend với thông báo lỗi
+      res.redirect(redirectUrl)
+    }
   }
 
   @Get('test')
