@@ -1,12 +1,7 @@
 import { Controller, Get, Inject, Param } from '@nestjs/common'
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger'
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { IRoleService } from './interfaces/irole.service'
-
+import { ApiResponseDto } from 'src/common/dto/apiResponse.dto'
 @ApiTags('roles')
 @Controller('roles')
 export class RoleController {
@@ -20,9 +15,18 @@ export class RoleController {
   @ApiResponse({
     status: 200,
     description: 'Returns the ID of the role.',
+    type: ApiResponseDto<string>,
   })
-  async getRoleIdByName(@Param('roleName') roleName: string): Promise<string> {
-    return await this.roleService.getRoleIdByName(roleName)
+  async getRoleIdByName(
+    @Param('roleName') roleName: string,
+  ): Promise<ApiResponseDto<string>> {
+    const roleExists = await this.roleService.getRoleIdByName(roleName)
+    return {
+      data: [roleExists],
+      message: 'Role ID retrieved successfully',
+      statusCode: 200,
+      success: true,
+    }
   }
 
   @Get('role-id/:roleId')
@@ -30,8 +34,17 @@ export class RoleController {
   @ApiResponse({
     status: 200,
     description: 'Returns the name of the role.',
+    type: ApiResponseDto<string>,
   })
-  async getRoleNameById(@Param('roleId') roleId: string): Promise<string> {
-    return await this.roleService.getRoleNameById(roleId)
+  async getRoleNameById(
+    @Param('roleId') roleId: string,
+  ): Promise<ApiResponseDto<string>> {
+    const roleExists = await this.roleService.getRoleNameById(roleId)
+    return {
+      data: [roleExists],
+      message: 'Role name retrieved successfully',
+      statusCode: 200,
+      success: true,
+    }
   }
 }

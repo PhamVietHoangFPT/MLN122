@@ -55,7 +55,6 @@ export class AuthService {
       const newUser = new this.userModel({
         email: googleUser.email,
         fullName: googleUser.fullName,
-        googleId: googleUser.id,
         picture: googleUser.picture,
         role: studentRole,
       })
@@ -65,15 +64,13 @@ export class AuthService {
     // Logic tạo JWT và trả về token của bạn ở đây...
     // ...
     const payload = {
-      sub: user._id,
+      _id: user._id,
       email: user.email,
       role: user.role,
       fullName: user.fullName,
       picture: user.picture,
     }
     const accessToken = this.jwtService.sign(payload)
-    // const refreshToken = ...
-
     return { accessToken }
   }
 

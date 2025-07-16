@@ -3,7 +3,13 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-
+interface JwtPayload {
+  _id: string
+  email: string
+  role: any // Hoặc kiểu dữ liệu cụ thể của role
+  fullName: string
+  picture: string
+}
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly configService: ConfigService) {
@@ -26,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @param payload Payload đã được giải mã từ JWT
    * @returns Dữ liệu sẽ được gắn vào request.user
    */
-  validate(payload: any) {
+  validate(payload: JwtPayload) {
     // payload ở đây chính là payload bạn đã dùng để tạo token trong auth.service.ts
     // { sub: user._id, email: user.email, role: user.role }
 
@@ -35,7 +41,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     // if (!user) { throw new UnauthorizedException(); }
 
     return {
-      userId: payload.sub,
+      _id: payload._id,
       email: payload.email,
       role: payload.role,
       fullName: payload.fullName,

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config'
 import { databaseConfig } from './config/database.config'
 import { AuthModule } from './module/auth/auth.module'
 import { RoleModule } from './module/role/role.module'
+import { SubjectModule } from './module/subject/subject.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -13,6 +14,7 @@ import { RoleModule } from './module/role/role.module'
     databaseConfig,
     AuthModule,
     RoleModule,
+    SubjectModule,
   ],
   controllers: [AppController],
   providers: [AppService],
