@@ -31,10 +31,10 @@ import { Roles } from 'src/common/decorators/roles.decorator'
 import { RoleEnum } from 'src/common/enums/role.enum'
 import { RolesGuard } from 'src/common/guard/roles.guard'
 
-@ApiTags('Exam')
+@ApiTags('exams')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
-@Controller('exam')
+@Controller('exams')
 export class ExamController {
   constructor(
     @Inject(IExamService)

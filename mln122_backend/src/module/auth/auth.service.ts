@@ -61,8 +61,11 @@ export class AuthService {
       user = await newUser.save()
     }
 
-    // Logic tạo JWT và trả về token của bạn ở đây...
-    // ...
+    if (user.deleted_at) {
+      throw new ForbiddenException(
+        'Tài khoản của bạn đã bị xóa. Vui lòng liên hệ quản trị viên để biết thêm chi tiết.',
+      )
+    }
     const payload = {
       _id: user._id,
       email: user.email,

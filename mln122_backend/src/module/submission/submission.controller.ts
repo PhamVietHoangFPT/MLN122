@@ -47,7 +47,7 @@ export class SubmissionController {
   ) {}
 
   @Post('exams/:examId/start')
-  //  @Roles(RoleEnum.STUDENT)
+  @Roles(RoleEnum.STUDENT, RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Bắt đầu một lượt làm bài thi' })
   @ApiResponse({
     status: 201,
@@ -69,7 +69,7 @@ export class SubmissionController {
   }
 
   @Post('submissions/:submissionId/submit')
-  //  @Roles(RoleEnum.STUDENT)
+  @Roles(RoleEnum.STUDENT, RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Nộp bài và chấm điểm' })
   @ApiBody({ type: SubmitExamDto })
   @ApiResponse({
@@ -97,7 +97,7 @@ export class SubmissionController {
   }
 
   @Post('submissions/:submissionId/cancel')
-  //  @Roles(RoleEnum.STUDENT)
+  @Roles(RoleEnum.STUDENT, RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Hủy một lượt làm bài đang diễn ra' })
   @ApiResponse({
     status: 200,
@@ -122,7 +122,7 @@ export class SubmissionController {
   }
 
   @Get('submissions')
-  //  @Roles(RoleEnum.STUDENT)
+  @Roles(RoleEnum.STUDENT, RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Lấy lịch sử các bài đã làm của bản thân' })
   @ApiResponse({
     status: 200,
@@ -143,7 +143,7 @@ export class SubmissionController {
   }
 
   @Get('submissions/:submissionId')
-  //  @Roles(RoleEnum.STUDENT)
+  @Roles(RoleEnum.STUDENT, RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Lấy kết quả của một lượt làm bài cụ thể' })
   @ApiResponse({
     status: 200,
