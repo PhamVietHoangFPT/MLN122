@@ -24,10 +24,10 @@ export class ExamRepository implements IExamRepository {
 
   async findAll(query: FilterQuery<ExamDocument>): Promise<ExamDocument[]> {
     return this.examModel
-      .find(query)
-      .select(
-        'examCode title duration -__v -deleted_at -created_at -updated_at -created_by -updated_by -deleted_by',
-      )
+      .find({
+        subject: query.subjectId,
+      })
+      .select('examCode title duration')
       .populate({
         path: 'subject',
         select: 'subjectName',
@@ -39,9 +39,7 @@ export class ExamRepository implements IExamRepository {
   async findById(id: string): Promise<ExamDocument | null> {
     return this.examModel
       .findById(id)
-      .select(
-        '-__v -deleted_at -created_at -updated_at -created_by -updated_by -deleted_by',
-      )
+      .select('')
       .populate({
         path: 'subject',
         select: 'subjectName',
@@ -67,9 +65,7 @@ export class ExamRepository implements IExamRepository {
         },
         { new: true },
       )
-      .select(
-        '-__v -deleted_at -created_at -updated_at -created_by -updated_by -deleted_by',
-      )
+      .select('')
       .lean()
       .exec()
   }
@@ -83,9 +79,7 @@ export class ExamRepository implements IExamRepository {
         { deleted_at: new Date(), deleted_by: userIdChangeToObjectId },
         { new: true },
       )
-      .select(
-        '-__v -deleted_at -created_at -updated_at -created_by -updated_by -deleted_by',
-      )
+      .select('')
       .lean()
       .exec()
   }

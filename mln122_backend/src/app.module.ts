@@ -7,6 +7,7 @@ import { AuthModule } from './module/auth/auth.module'
 import { RoleModule } from './module/role/role.module'
 import { SubjectModule } from './module/subject/subject.module'
 import { ExamModule } from './module/exam/exam.module'
+import { SubmissionModule } from './module/submission/submission.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,6 +18,7 @@ import { ExamModule } from './module/exam/exam.module'
     RoleModule,
     SubjectModule,
     ExamModule,
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
