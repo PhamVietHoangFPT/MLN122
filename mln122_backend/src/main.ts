@@ -1,9 +1,9 @@
 // src/main.ts
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
-import { ValidationPipe } from '@nestjs/common'
+import { ValidationPipe, ClassSerializerInterceptor } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { join } from 'node:path'
 import { JwtExceptionFilter } from './common/filters/jwt-exception.filter'
@@ -17,6 +17,8 @@ async function bootstrap() {
 
   // 1. Bật CORS
   app.enableCors()
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
 
   // 2. Đặt tiền tố toàn cục cho TẤT CẢ các API
   // Đây là dòng quan trọng nhất để sửa lỗi 404

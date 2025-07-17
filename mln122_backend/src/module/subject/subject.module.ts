@@ -7,10 +7,12 @@ import { ISubjectRepository } from './interfaces/isubject.repository'
 import { SubjectRepository } from './subject.repository'
 import { ISubjectService } from './interfaces/isubject.service'
 import { SubjectService } from './subject.service'
+import { RoleModule } from '../role/role.module'
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Subject.name, schema: SubjectSchema }]),
+    RoleModule,
   ],
   controllers: [SubjectController],
   providers: [

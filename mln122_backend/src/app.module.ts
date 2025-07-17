@@ -6,6 +6,7 @@ import { databaseConfig } from './config/database.config'
 import { AuthModule } from './module/auth/auth.module'
 import { RoleModule } from './module/role/role.module'
 import { SubjectModule } from './module/subject/subject.module'
+import { ExamModule } from './module/exam/exam.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,6 +16,7 @@ import { SubjectModule } from './module/subject/subject.module'
     AuthModule,
     RoleModule,
     SubjectModule,
+    ExamModule,
   ],
   controllers: [AppController],
   providers: [AppService],

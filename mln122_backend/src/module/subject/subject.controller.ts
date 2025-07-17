@@ -25,10 +25,11 @@ import { Roles } from 'src/common/decorators/roles.decorator'
 import { RoleEnum } from 'src/common/enums/role.enum'
 import { CreateSubjectDto } from './dto/createSubject.dto'
 import { ApiResponseDto } from 'src/common/dto/apiResponse.dto'
+import { RolesGuard } from 'src/common/guard/roles.guard'
 
 @ApiTags('subjects')
 @Controller('subjects')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth()
 export class SubjectController {
   constructor(
