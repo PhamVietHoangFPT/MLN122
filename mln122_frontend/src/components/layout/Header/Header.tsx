@@ -41,7 +41,7 @@ const CustomHeader: React.FC = () => {
               color: 'rgba(255, 255, 255, 0.65)',
             }}
           >
-            Một dự án cá nhân từ sinh viên, vì sinh viên
+            Một dự án cá nhân từ nhóm sinh viên FPT, vì sinh viên FPT
           </div>
         </div>
       </div>

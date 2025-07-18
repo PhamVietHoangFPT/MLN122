@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Layout, Typography } from 'antd'
-import {} from '@ant-design/icons'
+import { HeartOutlined } from '@ant-design/icons'
 import { SideBar } from './SideBarAdmin/SideBarAdmin'
 // import Cookies from 'js-cookie'
 // import { useEffect } from 'react'
@@ -50,7 +50,7 @@ export const AdminLayout = () => {
           }}
         >
           <Title level={4} style={{ margin: 0 }}>
-            Quản Lý Tiêm Chủng
+            Quản Lý Đề Thi
           </Title>
         </Header>
 
@@ -68,8 +68,9 @@ export const AdminLayout = () => {
         </Content>
 
         <Footer style={{ textAlign: 'center', padding: '12px 50px' }}>
-          <Text type='secondary'>
-            © 2025 GeneXis Admin Portal. All rights reserved.
+          <Text style={{ color: 'rgba(0, 0, 0, 0.45)' }}>
+            Made with <HeartOutlined /> by FPTU-ers | ©{' '}
+            {new Date().getFullYear()} Góc Học Tập FPT
           </Text>
         </Footer>
       </Layout>

@@ -30,6 +30,11 @@ const Profile = lazy(() => import('../pages/Profile'))
 
 const AllResult = lazy(() => import('../pages/AllResult'))
 
+const AdminPage = lazy(() => import('../pages/Admin/AdminPage'))
+
+const ManageExam = lazy(() => import('../pages/Admin/ManageExam'))
+
+const ManageSubject = lazy(() => import('../pages/Admin/ManageSubject'))
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -52,6 +57,12 @@ const routes: LayoutRoute[] = [
         component: HomePage,
         exact: true,
       },
+    ],
+  },
+  {
+    layout: MainLayout,
+    role: ['685d54822e239adc055c4abf', '685d54822e239adc055c4ac0'],
+    data: [
       {
         path: '/exam/:subjectId',
         component: ExamList,
@@ -79,8 +90,16 @@ const routes: LayoutRoute[] = [
     role: ['685d54822e239adc055c4abf'],
     data: [
       {
-        path: '/dashboard',
-        component: Login,
+        path: '/685d54822e239adc055c4abf/admin',
+        component: AdminPage,
+      },
+      {
+        path: '/685d54822e239adc055c4abf/exams',
+        component: ManageExam,
+      },
+      {
+        path: '/685d54822e239adc055c4abf/subjects',
+        component: ManageSubject,
       },
     ],
   },

@@ -38,9 +38,12 @@ export const SideBar = () => {
   // Get the current selected keys based on the pathname
   const getSelectedKeys = () => {
     const pathname = location.pathname
-    if (collapsed) return []
 
-    const paths = items.map((item) => item.key)
+    if (pathname === '685d54822e239adc055c4abf') {
+      return ['685d54822e239adc055c4abf']
+    }
+
+    const paths = ['exams', 'subjects', 'admin']
 
     for (const path of paths) {
       if (pathname.includes(path)) {
@@ -57,53 +60,22 @@ export const SideBar = () => {
   // Define the menu items
   const items = [
     {
-      key: 'admin',
+      key: '685d54822e239adc055c4abf/admin',
       icon: <BarChartOutlined />,
       label: 'Quản trị',
-      onClick: () => navigate('admin'),
+      onClick: () => navigate('685d54822e239adc055c4abf/admin'),
     },
     {
-      key: 'admin/slotAdmin',
+      key: '685d54822e239adc055c4abf/subjects',
       icon: <BarChartOutlined />,
-      label: 'Ca làm việc',
-      onClick: () => navigate('admin/slotAdmin'),
+      label: 'Quản lý môn học',
+      onClick: () => navigate('685d54822e239adc055c4abf/subjects'),
     },
     {
-      key: 'admin/slotsFacilitiesAdmin',
+      key: '685d54822e239adc055c4abf/exams',
       icon: <BarChartOutlined />,
-      label: 'Ca & Cơ sở',
-      onClick: () => navigate('admin/slotsFacilitiesAdmin'),
-    },
-    {
-      key: 'admin/facility',
-      icon: <BarChartOutlined />,
-      label: 'Danh sách cơ sở',
-      onClick: () => navigate('/admin/facilities?pageNumber=1&pageSize=10'),
-    },
-    {
-      key: 'service',
-      icon: <AppstoreOutlined />,
-      label: 'Quản lý dịch vụ',
-      children: [
-        {
-          key: 'admin/services',
-          icon: <AppstoreOutlined />,
-          label: 'Dịch vụ',
-          onClick: () => navigate('/admin/services?pageNumber=1&pageSize=10'),
-        },
-        {
-          key: 'admin/time-returns',
-          icon: <ClockCircleOutlined />,
-          label: 'Thời gian trả',
-          onClick: () => navigate('/admin/time-returns'),
-        },
-        {
-          key: 'admin/sample-management',
-          icon: <ExperimentOutlined />,
-          label: 'Quản lý Mẫu Thử',
-          onClick: () => navigate('/admin/samples'),
-        },
-      ],
+      label: 'Quản lý đề thi',
+      onClick: () => navigate('685d54822e239adc055c4abf/exams'),
     },
   ]
 
@@ -199,17 +171,16 @@ export const SideBar = () => {
             marginBottom: collapsed ? 0 : 12,
           }}
         >
-          <Avatar icon={<UserOutlined />} />
+          <Avatar>
+            <img src={userData?.picture || ''} alt='' />
+          </Avatar>
           {!collapsed && (
             <div style={{ marginLeft: 12 }}>
               <div style={{ fontWeight: 500, fontSize: 14, color: 'black' }}>
-                {userData?.name || 'Admin User'}
+                {userData?.fullName || 'Admin User'}
               </div>
               <div style={{ fontSize: 12, color: 'black' }}>
                 {userData?.email || 'admin@vaccitrack.com'}
-              </div>
-              <div style={{ fontSize: 12, color: 'gray', marginTop: 4 }}>
-                {userData?.facility?.facilityName || 'No Facility'}
               </div>
             </div>
           )}

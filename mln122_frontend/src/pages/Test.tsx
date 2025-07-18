@@ -20,6 +20,7 @@ import {
   Statistic,
   Modal,
   notification,
+  ConfigProvider,
 } from 'antd'
 import {
   ArrowLeftOutlined,
@@ -27,7 +28,9 @@ import {
   ExclamationCircleFilled,
 } from '@ant-design/icons'
 import type { RadioChangeEvent } from 'antd'
-
+import type { UserProfile } from '../types/userProfile'
+import DoesnotLoginYet from '../components/Permission/DoesnotLoginYet'
+import Cookies from 'js-cookie'
 const { confirm } = Modal
 const { Sider, Content } = Layout
 const { Title, Text } = Typography
@@ -66,27 +69,27 @@ const ExamUI = ({
     useSubmitSubmissionMutation()
 
   const [cancelSubmission] = useCancelSubmissionMutation()
-  // const [isExamInProgress, setIsExamInProgress] = useState(true)
-  // const blocker = useBlocker(isExamInProgress)
+  const [isExamInProgress, setIsExamInProgress] = useState(true)
+  const blocker = useBlocker(isExamInProgress)
 
-  // useEffect(() => {
-  //   if (blocker.state === 'blocked') {
-  //     confirm({
-  //       title: 'Bạn chắc chắn muốn rời khỏi bài thi?',
-  //       content: 'Dữ liệu bài làm sẽ bị hủy và không thể khôi phục.',
-  //       okText: 'Xác nhận rời đi',
-  //       cancelText: 'Ở lại',
-  //       centered: true,
-  //       onOk: async () => {
-  //         await cancelSubmission(submissionId) // Hủy bài thi
-  //         blocker.proceed() // Tiếp tục điều hướng
-  //       },
-  //       onCancel: () => {
-  //         blocker.reset() // Ở lại trang
-  //       },
-  //     })
-  //   }
-  // }, [blocker, submissionId, cancelSubmission])
+  useEffect(() => {
+    if (blocker.state === 'blocked') {
+      confirm({
+        title: 'Bạn chắc chắn muốn rời khỏi bài thi?',
+        content: 'Mọi dữ liệu trước khi nộp sẽ không được lưu lại.',
+        okText: 'Xác nhận rời đi',
+        cancelText: 'Tiếp tục làm bài',
+        centered: true,
+        onOk: async () => {
+          await cancelSubmission(submissionId) // Hủy bài thi
+          blocker.proceed() // Tiếp tục điều hướng
+        },
+        onCancel: () => {
+          blocker.reset() // Ở lại trang
+        },
+      })
+    }
+  }, [blocker, submissionId, cancelSubmission])
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -133,7 +136,7 @@ const ExamUI = ({
         })),
       }
       await submitSubmission(payload).unwrap()
-      // setIsExamInProgress(false)
+      setIsExamInProgress(false)
       alert('Hết giờ! Bài làm của bạn đã được nộp tự động.')
       navigate(`/result/${submissionId}`)
     } catch (err) {
@@ -155,7 +158,7 @@ const ExamUI = ({
         })),
       }
       await submitSubmission(payload).unwrap()
-      // setIsExamInProgress(false)
+      setIsExamInProgress(false)
       alert('Bài làm của bạn đã được nộp thành công.')
       navigate(`/result/${submissionId}`)
     } catch (err) {
@@ -168,110 +171,145 @@ const ExamUI = ({
 
   if (!currentQuestion) return null
 
+  const shuffledNavQuestions = useMemo(() => {
+    const questionsWithOriginalIndex = exam.questions.map((q, index) => ({
+      questionData: q,
+      originalIndex: index,
+    }))
+    // Xáo trộn mảng
+    return questionsWithOriginalIndex.sort(() => Math.random() - 0.5)
+  }, [exam.questions])
+
   return (
     <Layout style={{ height: '100%', background: '#f0f2f5' }}>
-      <Sider
-        width={280}
-        style={{
-          background: '#fff',
-          padding: '16px',
-          borderRight: '1px solid #e8e8e8',
+      <ConfigProvider
+        theme={{
+          token: {
+            // Đặt màu chủ đạo thành màu bạn muốn
+            colorPrimary: '#262626',
+          },
         }}
       >
-        {/* === THÊM MỚI: Đồng hồ đếm ngược === */}
-        <Card
-          variant={'borderless'}
-          style={{ textAlign: 'center', marginBottom: '16px' }}
-        >
-          <Statistic.Timer
-            type='countdown'
-            title='Thời gian còn lại'
-            value={deadline}
-            onFinish={handleSubmitTimer}
-            format='mm:ss'
-          />
-        </Card>
-        {/* ==================================== */}
-
-        <Title level={4}>Danh sách câu hỏi</Title>
-        <Divider />
-        <Row gutter={[8, 8]}>
-          {exam.questions.map((q, index) => (
-            <Col span={6} key={q.questionNo}>
-              <Button
-                shape='circle'
-                type={userAnswers[q.questionNo] ? 'primary' : 'default'}
-                onClick={() => setCurrentQuestionIndex(index)}
-                style={{
-                  borderColor:
-                    currentQuestionIndex === index ? '#262626' : undefined,
-                  fontWeight:
-                    currentQuestionIndex === index ? 'bold' : 'normal',
-                }}
-              >
-                {q.questionNo}
-              </Button>
-            </Col>
-          ))}
-        </Row>
-        <Button
-          type='primary'
-          danger
-          block
-          onClick={handleSubmit}
-          loading={isSubmitting}
-          style={{ marginTop: '24px' }}
-        >
-          Nộp bài
-        </Button>
-      </Sider>
-
-      <Content style={{ padding: '24px 48px' }}>
-        <Card>
-          <Title level={4}>
-            Câu {currentQuestion.questionNo}: {currentQuestion.title}
-          </Title>
-          <Radio.Group
-            onChange={handleAnswerChange}
-            value={userAnswers[currentQuestion.questionNo]}
-            style={{ marginTop: '16px' }}
-          >
-            <Space direction='vertical' size='large'>
-              {shuffledAnswers.map((answer) => (
-                <Radio
-                  key={answer.answerCode}
-                  value={answer.answerCode}
-                  style={{ fontSize: '16px' }}
-                >
-                  {answer.answerText}
-                </Radio>
-              ))}
-            </Space>
-          </Radio.Group>
-        </Card>
-        <div
+        <Sider
+          width={280}
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: '24px',
+            background: '#fff',
+            padding: '16px',
+            borderRight: '1px solid #e8e8e8',
           }}
         >
-          <Button
-            icon={<ArrowLeftOutlined />}
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-            disabled={currentQuestionIndex === 0}
+          {/* === THÊM MỚI: Đồng hồ đếm ngược === */}
+          <Card
+            variant={'borderless'}
+            style={{ textAlign: 'center', marginBottom: '16px' }}
           >
-            Câu trước
-          </Button>
+            <Statistic.Timer
+              type='countdown'
+              title='Thời gian còn lại'
+              value={deadline}
+              onFinish={handleSubmitTimer}
+              format='mm:ss'
+            />
+          </Card>
+          {/* ==================================== */}
+
+          <Title level={4}>Danh sách câu hỏi</Title>
+          <Divider />
+          <Row gutter={[8, 8]}>
+            {shuffledNavQuestions.map((item) => (
+              <Col span={6} key={item.questionData.questionNo}>
+                <Button
+                  shape='circle'
+                  // Kiểm tra câu trả lời dựa trên questionNo
+                  type={
+                    userAnswers[item.questionData.questionNo]
+                      ? 'primary'
+                      : 'default'
+                  }
+                  // Dùng chỉ số gốc để điều hướng đến đúng câu hỏi
+                  onClick={() => setCurrentQuestionIndex(item.originalIndex)}
+                  style={{
+                    // So sánh với chỉ số gốc để xác định câu hỏi đang được chọn
+                    borderColor:
+                      currentQuestionIndex === item.originalIndex
+                        ? '#262626'
+                        : undefined,
+                    fontWeight:
+                      currentQuestionIndex === item.originalIndex
+                        ? 'bold'
+                        : 'normal',
+                    backgroundColor:
+                      currentQuestionIndex === item.originalIndex
+                        ? '#262626'
+                        : undefined,
+                    color:
+                      currentQuestionIndex === item.originalIndex
+                        ? '#fff'
+                        : undefined,
+                  }}
+                >
+                  {item.questionData.questionNo}
+                </Button>
+              </Col>
+            ))}
+          </Row>
           <Button
-            icon={<ArrowRightOutlined />}
-            onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-            disabled={currentQuestionIndex === exam.questions.length - 1}
+            type='primary'
+            danger
+            block
+            onClick={handleSubmit}
+            loading={isSubmitting}
+            style={{ marginTop: '24px' }}
           >
-            Câu tiếp
+            Nộp bài
           </Button>
-        </div>
-      </Content>
+        </Sider>
+
+        <Content style={{ padding: '24px 48px' }}>
+          <Card>
+            <Title level={4}>{currentQuestion.title}</Title>
+            <Radio.Group
+              onChange={handleAnswerChange}
+              value={userAnswers[currentQuestion.questionNo]}
+              style={{ marginTop: '16px' }}
+            >
+              <Space direction='vertical' size='large'>
+                {shuffledAnswers.map((answer) => (
+                  <Radio
+                    key={answer.answerCode}
+                    value={answer.answerCode}
+                    style={{ fontSize: '16px' }}
+                  >
+                    {answer.answerText}
+                  </Radio>
+                ))}
+              </Space>
+            </Radio.Group>
+          </Card>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              marginTop: '24px',
+            }}
+          >
+            <Button
+              icon={<ArrowLeftOutlined />}
+              onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+              disabled={currentQuestionIndex === 0}
+            >
+              Câu trước
+            </Button>
+            <Button
+              icon={<ArrowRightOutlined />}
+              onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+              disabled={currentQuestionIndex === exam.questions.length - 1}
+            >
+              Câu tiếp
+            </Button>
+          </div>
+        </Content>
+      </ConfigProvider>
     </Layout>
   )
 }
@@ -350,6 +388,15 @@ export default function Test() {
         submissionId={submissionData.submissionId}
       />
     )
+  }
+
+  const userData: UserProfile | null = useMemo(() => {
+    const data = Cookies.get('userData')
+    return data ? JSON.parse(data) : null
+  }, [])
+
+  if (!userData) {
+    return <DoesnotLoginYet />
   }
 
   // Giao diện ban đầu -> nút bắt đầu

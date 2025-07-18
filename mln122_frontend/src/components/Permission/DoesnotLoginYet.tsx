@@ -10,7 +10,6 @@ export default function DoesnotLoginYet() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '80vh',
       }}
     >
       <Result

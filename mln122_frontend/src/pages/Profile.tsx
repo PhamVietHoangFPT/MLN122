@@ -1,41 +1,17 @@
-import { useMemo } from 'react'
 import { Layout, Card, Typography, Avatar, Descriptions, Row, Col } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
-import Cookies from 'js-cookie'
 
 import ProfileNavbar from '../components/layout/Navbar/ProfileNavbar'
-
+import type { UserProfile } from '../types/userProfile'
+import { useMemo } from 'react'
+import Cookies from 'js-cookie'
 const { Content } = Layout
-const { Title, Text } = Typography
-
-// Định nghĩa kiểu dữ liệu User đã được đơn giản hóa
-interface UserProfile {
-  fullName: string
-  email: string
-  picture: string
-}
-
+const { Title } = Typography
 export default function Profile() {
-  // Dùng useMemo để chỉ parse cookie một lần
   const userData: UserProfile | null = useMemo(() => {
     const data = Cookies.get('userData')
     return data ? JSON.parse(data) : null
   }, [])
-
-  if (!userData) {
-    return (
-      <Layout
-        style={{
-          minHeight: '80vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text>Vui lòng đăng nhập để xem thông tin cá nhân.</Text>
-      </Layout>
-    )
-  }
 
   return (
     <Layout

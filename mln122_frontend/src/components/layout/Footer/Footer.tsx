@@ -86,7 +86,7 @@ const StudentProjectFooter: React.FC = () => {
         }}
       >
         <Text style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
-          Made with <HeartOutlined /> by an FPTU-er | ©{' '}
+          Made with <HeartOutlined /> by FPTU-ers | ©{' '}
           {new Date().getFullYear()} Góc Học Tập FPT
         </Text>
       </div>
