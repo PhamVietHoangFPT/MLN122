@@ -23,10 +23,7 @@ export class ExamService implements IExamService {
     private readonly subjectRepository: ISubjectRepository,
   ) {}
 
-  async create(
-    createExamDto: CreateExamDto,
-    userId: string,
-  ): Promise<ExamResponseDto> {
+  async create(createExamDto: CreateExamDto, userId: string): Promise<boolean> {
     const existingExam = await this.examRepository.findByExamCode(
       createExamDto.examCode,
     )
@@ -38,7 +35,7 @@ export class ExamService implements IExamService {
       throw new NotFoundException('Không thể tạo đề thi')
     }
 
-    return new ExamResponseDto(data)
+    return true
   }
 
   async findAll(query: FilterQuery<ExamDocument>): Promise<ExamResponseDto[]> {

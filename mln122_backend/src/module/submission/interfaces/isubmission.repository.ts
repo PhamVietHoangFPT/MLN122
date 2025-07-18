@@ -27,6 +27,11 @@ export interface ISubmissionRepository {
     data: FinalSubmissionData,
   ): Promise<SubmissionDocument | null>
   findAll(query: FilterQuery<SubmissionDocument>): Promise<SubmissionDocument[]>
+  getExamIdBySubmissionId(submissionId: string): Promise<string | null>
+  cancelSubmission(
+    submissionId: string,
+    data: any,
+  ): Promise<SubmissionDocument | null>
 }
 
 export const ISubmissionRepository = Symbol('ISubmissionRepository')

@@ -6,7 +6,7 @@ import { ExamDocument } from '../schemas/exam.schema'
 import { FilterQuery } from 'mongoose'
 
 export interface IExamService {
-  create(createExamDto: CreateExamDto, userId: string): Promise<ExamResponseDto>
+  create(createExamDto: CreateExamDto, userId: string): Promise<boolean>
 
   findAll(query: FilterQuery<ExamDocument>): Promise<ExamResponseDto[]>
 

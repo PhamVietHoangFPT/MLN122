@@ -30,10 +30,8 @@ import { JwtAuthGuard } from 'src/common/guard/auth.guard'
 import { Roles } from 'src/common/decorators/roles.decorator'
 import { RoleEnum } from 'src/common/enums/role.enum'
 import { RolesGuard } from 'src/common/guard/roles.guard'
-
+import { ApiResponseDto } from 'src/common/dto/apiResponse.dto'
 @ApiTags('exams')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 @Controller('exams')
 export class ExamController {
   constructor(
@@ -47,12 +45,18 @@ export class ExamController {
   @ApiResponse({
     status: 200,
     description: 'Danh sách đề thi',
-    type: [ExamResponseDto],
+    type: [ApiResponseDto<ExamResponseDto>],
   })
   async findAll(
     @Query() queryDto: FindExamsQueryDto,
-  ): Promise<ExamResponseDto[]> {
-    return this.examService.findAll(queryDto)
+  ): Promise<ApiResponseDto<ExamResponseDto>> {
+    const data = await this.examService.findAll(queryDto)
+    return {
+      data,
+      success: true,
+      message: 'Danh sách đề thi',
+      statusCode: 200,
+    }
   }
 
   @Get('student/:id')
@@ -61,12 +65,18 @@ export class ExamController {
   @ApiResponse({
     status: 200,
     description: 'Thông tin đề thi cho sinh viên',
-    type: ExamForStudentDto,
+    type: ApiResponseDto<ExamForStudentDto>,
   })
   async findByIdForStudent(
     @Param('id') id: string,
-  ): Promise<ExamForStudentDto | null> {
-    return this.examService.findByIdForStudent(id)
+  ): Promise<ApiResponseDto<ExamForStudentDto | null>> {
+    const data = await this.examService.findByIdForStudent(id)
+    return {
+      data: [data],
+      success: true,
+      message: 'Thông tin đề thi cho sinh viên',
+      statusCode: 200,
+    }
   }
 
   @Get(':id')
@@ -75,13 +85,23 @@ export class ExamController {
   @ApiResponse({
     status: 200,
     description: 'Thông tin đề thi',
-    type: ExamResponseDto,
+    type: ApiResponseDto<ExamResponseDto>,
   })
-  async findById(@Param('id') id: string): Promise<ExamResponseDto> {
-    return this.examService.findById(id)
+  async findById(
+    @Param('id') id: string,
+  ): Promise<ApiResponseDto<ExamResponseDto>> {
+    const data = await this.examService.findById(id)
+    return {
+      data: [data],
+      success: true,
+      message: 'Thông tin đề thi',
+      statusCode: 200,
+    }
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Tạo đề thi mới' })
   @ApiBody({ type: CreateExamDto })
   @ApiResponse({
@@ -93,44 +113,66 @@ export class ExamController {
   async createExam(
     @Body() createExamDto: CreateExamDto,
     @Req() req: any,
-  ): Promise<ExamResponseDto> {
+  ): Promise<ApiResponseDto<boolean>> {
     const userId = req.user._id
-    return this.examService.create(createExamDto, userId)
+    const success = await this.examService.create(createExamDto, userId)
+    return {
+      data: [success],
+      success,
+      message: success ? 'Tạo đề thi thành công' : 'Tạo đề thi thất bại',
+      statusCode: success ? 201 : 400,
+    }
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Cập nhật đề thi theo ID' })
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiBody({ type: UpdateExamDto })
   @ApiResponse({
     status: 200,
     description: 'Cập nhật đề thi thành công',
-    type: ExamResponseDto,
+    type: ApiResponseDto<ExamResponseDto>,
   })
   @Roles(RoleEnum.ADMIN)
   async updateExam(
     @Param('id') id: string,
     @Body() updateExamDto: UpdateExamDto,
     @Req() req: any,
-  ): Promise<ExamResponseDto | null> {
+  ): Promise<ApiResponseDto<ExamResponseDto> | null> {
     const userId = req.user._id
-    return this.examService.update(id, updateExamDto, userId)
+    const updatedExam = await this.examService.update(id, updateExamDto, userId)
+    return {
+      data: [updatedExam],
+      success: true,
+      message: 'Cập nhật đề thi thành công',
+      statusCode: 200,
+    }
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Xóa đề thi theo ID' })
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiResponse({
     status: 200,
     description: 'Xóa đề thi thành công',
-    type: ExamResponseDto,
+    type: ApiResponseDto<ExamResponseDto>,
   })
   @Roles(RoleEnum.ADMIN)
   async deleteExam(
     @Param('id') id: string,
     @Req() req: any,
-  ): Promise<ExamResponseDto | null> {
+  ): Promise<ApiResponseDto<ExamResponseDto> | null> {
     const userId = req.user._id
-    return this.examService.delete(id, userId)
+    const deletedExam = await this.examService.delete(id, userId)
+    return {
+      data: [deletedExam],
+      success: true,
+      message: 'Xóa đề thi thành công',
+      statusCode: 200,
+    }
   }
 }

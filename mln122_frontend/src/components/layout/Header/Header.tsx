@@ -1,36 +1,48 @@
+import React from 'react'
 import { Layout } from 'antd'
+
 const { Header } = Layout
 
-const CustomHeader = () => {
+const CustomHeader: React.FC = () => {
   return (
     <Header
       style={{
-        background: '#1890ff',
+        // Áp dụng style nền tối từ footer
+        background: '#262626',
         padding: '40px 40px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)', // Tăng nhẹ shadow trên nền tối
         height: 'auto',
       }}
     >
-      {/* Logo */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
           gap: '10px',
-          color: 'white',
+          color: 'white', // Màu chữ đã phù hợp với nền tối
           fontSize: '20px',
           fontWeight: 'bold',
           height: '90px',
           margin: 20,
+          textAlign: 'center',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>HỆ THỐNG TRUNG TÂM XÉT NGHIÊM ADN UY TÍN HÀNG ĐẦU</div>
-          <div>AN TOÀN - UY TÍN - CHẤT LƯỢNG HÀNG ĐẦU VIỆT NAM *</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div>GÓC HỌC TẬP SINH VIÊN FPT</div>
+          <div
+            style={{
+              fontSize: '16px',
+              fontWeight: 'normal',
+              // Dùng màu chữ phụ của footer để tạo sự tương phản nhẹ
+              color: 'rgba(255, 255, 255, 0.65)',
+            }}
+          >
+            Một dự án cá nhân từ sinh viên, vì sinh viên
+          </div>
         </div>
       </div>
     </Header>

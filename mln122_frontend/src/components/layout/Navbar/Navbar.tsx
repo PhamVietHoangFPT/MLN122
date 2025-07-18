@@ -3,20 +3,23 @@ import {
   LoginOutlined,
   UserOutlined,
   LogoutOutlined,
-  CalendarOutlined,
   HomeFilled,
-  SmileOutlined,
+  BookOutlined, // Icon mới
+  EditOutlined, // Icon mới
+  QuestionCircleOutlined, // Icon mới
 } from '@ant-design/icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBlog } from '@fortawesome/free-solid-svg-icons'
 import type { MenuProps } from 'antd'
-import { Menu, Layout } from 'antd'
+import { Menu, Layout, Typography, ConfigProvider } from 'antd'
 const { Header } = Layout
+const { Title } = Typography
 import { useNavigate, useLocation } from 'react-router-dom'
 import Cookies from 'js-cookie'
 
-const Navbar: React.FC = () => {
+const StudentProjectNavbar: React.FC = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+
+  // --- Giữ nguyên logic xử lý active key của bạn ---
   const [current, setCurrent] = useState(() => {
     const path = location.pathname.split('/')[1] || 'home'
     return path
@@ -26,71 +29,51 @@ const Navbar: React.FC = () => {
     setCurrent(location.pathname.split('/')[1] || 'home')
   }, [location.pathname])
 
-  const userData = Cookies.get('userData')
-    ? JSON.parse(Cookies.get('userData') as string)
-    : null
-  const navigate = useNavigate()
+  // --- Giữ nguyên logic lấy userData của bạn ---
+  const userData = useMemo(() => {
+    const data = Cookies.get('userData')
+    return data ? JSON.parse(data) : null
+  }, [Cookies.get('userData')])
 
-  const items = useMemo(() => {
+  // === THAY ĐỔI: Cập nhật lại menu chính cho phù hợp dự án ===
+  const mainItems = useMemo(() => {
     return [
       {
         key: 'home',
-        icon: <HomeFilled style={{ fontSize: '16px' }} />,
+        icon: <HomeFilled style={{ fontSize: '16px', color: '#262626' }} />,
         label: 'Trang chủ',
-        style: { fontSize: '16px', color: '#616161' },
+        style: { fontSize: '16px' },
         url: '/',
       },
-      // {
-      //   key: 'services',
-      //   icon: <SmileOutlined style={{ fontSize: '16px' }} />,
-      //   label: 'Dịch vụ',
-      //   style: { fontSize: '16px', color: '#616161' },
-      //   url: '/vaccines?pageNumber=1',
-      // },
       {
-        key: 'booking',
-        icon: <CalendarOutlined style={{ fontSize: '16px' }} />,
-        label: 'Đặt chỗ',
-        style: { fontSize: '16px', color: '#616161' },
-        url: '/booking',
-      },
-      {
-        key: 'blogs',
-        icon: <FontAwesomeIcon icon={faBlog} style={{ fontSize: '16px' }} />,
-        label: 'Cẩm nang',
-        style: { fontSize: '16px', color: '#616161' },
-        url: '/blogs',
+        key: 'qa',
+        icon: (
+          <QuestionCircleOutlined
+            style={{ fontSize: '16px', color: '#262626' }}
+          />
+        ),
+        label: 'Hỏi Đáp',
+        style: { fontSize: '16px' },
+        url: '/qa',
       },
     ]
   }, [])
 
+  // === THAY ĐỔI: Tinh gọn menu người dùng, bỏ các dịch vụ ADN ===
   const userItems = useMemo(() => {
     return [
       {
-        key: 'adn-at-facility',
-        icon: <SmileOutlined style={{ fontSize: '16px' }} />,
-        label: 'Dịch vụ hành chính',
-        style: { fontSize: '16px', color: '#616161' },
-        url: '/register-service',
-      },
-      {
-        key: 'kit',
-        icon: <CalendarOutlined style={{ fontSize: '16px' }} />,
-        label: 'Lấy mẫu tại nhà',
-        style: { fontSize: '16px', color: '#616161' },
-        url: '/home-registeration',
-      },
-      {
         key: userData ? 'profile' : 'login',
         icon: userData ? (
-          <UserOutlined style={{ fontSize: '16px' }} />
+          <UserOutlined style={{ fontSize: '16px', color: '#262626' }} />
         ) : (
-          <LoginOutlined style={{ fontSize: '16px' }} />
+          <LoginOutlined style={{ fontSize: '16px', color: '#262626' }} />
         ),
-        label: userData ? 'Hồ sơ' : 'Đăng nhập / Đăng ký',
-        style: { fontSize: '16px', color: '#616161' },
+        label: userData ? 'Hồ sơ cá nhân' : 'Đăng nhập / Đăng ký', // <-- TÍNH NĂNG MỚI
+        style: { fontSize: '16px' },
         url: userData ? '/profile' : '/login',
       },
+      // Giữ nguyên logic logout thông minh của bạn
       ...(userData
         ? [
             {
@@ -100,7 +83,7 @@ const Navbar: React.FC = () => {
               style: { fontSize: '16px', color: 'red' },
               onClick: () => {
                 Cookies.remove('userData')
-                Cookies.remove('userToken')
+                Cookies.remove('userToken') // Giả sử bạn cũng có userToken
                 navigate('/login')
               },
             },
@@ -109,20 +92,17 @@ const Navbar: React.FC = () => {
     ]
   }, [userData, navigate])
 
+  // --- Giữ nguyên logic onClick để điều hướng của bạn ---
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)
-    const findItem = (items: any[], key: string) => {
+    const findItem = (items: any[], key: string): any | null => {
       for (const item of items) {
         if (item.key === key) return item
-        if (item.children) {
-          const found: any = findItem(item.children, key)
-          if (found) return found
-        }
       }
       return null
     }
 
-    const allItems = [...items, ...userItems]
+    const allItems = [...mainItems, ...userItems]
     const item = findItem(allItems, e.key)
     if (item?.url) {
       navigate(item.url)
@@ -133,32 +113,69 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <Header style={{ background: '#fff' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid #f0f0f0',
+    <Header style={{ background: '#fff', padding: '0 40px' }}>
+      {/* Bọc các Menu bằng ConfigProvider */}
+      <ConfigProvider
+        theme={{
+          components: {
+            Menu: {
+              // Màu chữ của item khi được chọn
+              itemSelectedColor: '#262626',
+              // Màu nền của item khi được chọn (đổi thành màu xám nhạt để dễ nhìn)
+              itemSelectedBg: '#f0f0f0',
+
+              colorPrimary: '#262626',
+            },
+          },
         }}
       >
-        <Menu
-          onClick={onClick}
-          selectedKeys={[current]}
-          mode='horizontal'
-          items={items}
-          style={{ flex: '7', borderBottom: 'none' }}
-        />
-        <Menu
-          onClick={onClick}
-          selectedKeys={[current]}
-          mode='horizontal'
-          items={userItems}
-          style={{ flex: '3', borderBottom: 'none' }}
-        />
-      </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          {/* Phần Logo/Tên dự án */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <BookOutlined
+              style={{
+                fontSize: '28px',
+                color: '#262626',
+                marginRight: '12px',
+              }}
+            />
+            <Title level={4} style={{ margin: 0 }}>
+              Góc Học Tập FPT
+            </Title>
+          </div>
+
+          {/* Phần Menu chính (bên phải logo) */}
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode='horizontal'
+            items={mainItems}
+            style={{ flex: 1, borderBottom: 'none', justifyContent: 'center' }}
+          />
+
+          {/* Phần Menu người dùng (bên phải cùng) */}
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode='horizontal'
+            items={userItems}
+            style={{
+              borderBottom: 'none',
+              minWidth: '200px',
+              justifyContent: 'flex-end',
+            }}
+          />
+        </div>
+      </ConfigProvider>
     </Header>
   )
 }
 
-export default Navbar
+export default StudentProjectNavbar

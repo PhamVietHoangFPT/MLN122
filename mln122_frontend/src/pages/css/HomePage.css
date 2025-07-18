@@ -1,0 +1,14 @@
+/* Style cho card ở trạng thái bình thường */
+.subject-card {
+  /* Hiệu ứng chuyển đổi sẽ diễn ra mượt mà trong 0.3 giây */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Style khi di chuột vào card */
+.subject-card.ant-card-hoverable:hover {
+  border-color: #595959;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  /* Đổ bóng nhẹ và lan tỏa hơn */
+  transition: border-color 0.2s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(-4px);
+}

@@ -29,8 +29,6 @@ import { RolesGuard } from 'src/common/guard/roles.guard'
 
 @ApiTags('subjects')
 @Controller('subjects')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@ApiBearerAuth()
 export class SubjectController {
   constructor(
     @Inject(ISubjectService)
@@ -38,6 +36,8 @@ export class SubjectController {
   ) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles(RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Tạo môn học mới' })
   @ApiBody({ type: CreateSubjectDto })
@@ -97,6 +97,8 @@ export class SubjectController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles(RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Cập nhật môn học theo ID' })
   @ApiBody({ type: CreateSubjectDto })
@@ -121,6 +123,8 @@ export class SubjectController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   @Roles(RoleEnum.ADMIN)
   @ApiOperation({ summary: 'Xóa môn học theo ID' })
   @ApiResponse({

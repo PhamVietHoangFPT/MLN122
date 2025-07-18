@@ -1,14 +1,24 @@
-import { Layout, Card, Typography, Row, Col, Button } from 'antd'
+import React, { useEffect } from 'react'
+import {
+  Layout,
+  Card,
+  Typography,
+  Row,
+  Col,
+  Button,
+  Space,
+  Divider,
+} from 'antd'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import { useEffect } from 'react'
-
-const { Content } = Layout
-const { Title } = Typography
+import { FcGoogle } from 'react-icons/fc' // Icon Google từ react-icons
+import { BookOutlined, CheckCircleOutlined } from '@ant-design/icons'
+const { Title, Text } = Typography
 
 export default function Login() {
   const navigate = useNavigate()
-
+  const url = import.meta.env.VITE_API_ENDPOINT
+  // Logic kiểm tra đăng nhập của bạn (giữ nguyên)
   useEffect(() => {
     const userData = Cookies.get('userData')
       ? JSON.parse(Cookies.get('userData') as string)
@@ -18,61 +28,109 @@ export default function Login() {
     }
   }, [navigate])
 
+  // Logic xử lý đăng nhập Google của bạn (giữ nguyên)
   const handleGoogleLogin = () => {
-    // Chuyển hướng đến endpoint backend để bắt đầu quá trình OAuth
-    // Hãy chắc chắn rằng URL này đúng với địa chỉ backend của bạn
-    window.location.href = 'http://localhost:5000/api/auth/google'
+    window.location.href = `${url}/auth/google`
   }
 
   return (
     <Layout
       style={{
-        minHeight: 'calc(100vh - 124px)',
+        minHeight: 'calc(100vh - 128px)', // Giả sử header+footer cao 128px
+        background: '#f0f2f5', // Màu nền xám nhẹ của AntD
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: '24px',
       }}
     >
-      <Content
-        style={{
-          width: '80%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignContent: 'center',
-          justifyContent: 'center',
-          padding: '24px',
-        }}
+      <Row
+        gutter={[64, 32]}
+        align='middle'
+        justify='center'
+        style={{ maxWidth: '1000px' }}
       >
-        <Row gutter={[32, 32]} align='middle'>
-          {/* Hình ảnh minh họa */}
-          <Col xs={24} md={12} style={{ textAlign: 'center' }}>
-            <Title
-              level={2}
-              style={{ textAlign: 'center', marginBottom: '24px' }}
-            >
-              Đăng nhập vào hệ thống ôn thi MLN122
-            </Title>
-          </Col>
+        {/* Cột trái: Hình ảnh và mô tả */}
+        <Col xs={24} lg={12} style={{ textAlign: 'center' }}>
+          <BookOutlined
+            style={{
+              fontSize: '128px',
+              color: '#262626',
+              marginBottom: '16px',
+            }}
+          />
+          <Title level={3} style={{ marginTop: '24px' }}>
+            Góc Học Tập FPT
+          </Title>
+          <Text type='secondary'>
+            Nền tảng cá nhân hỗ trợ ôn tập và thi thử dành cho sinh viên FPT.
+          </Text>
+        </Col>
 
-          {/* Form đăng nhập */}
-          <Col xs={24} md={12}>
-            <Card
-              bordered={false}
+        {/* Cột phải: Khung đăng nhập */}
+        <Col xs={24} lg={12}>
+          <Card
+            style={{
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderRadius: '16px',
+              padding: '16px',
+            }}
+          >
+            <div style={{ textAlign: 'center' }}>
+              <Title level={2}>Đăng Nhập</Title>
+              <Text type='secondary'>
+                Sử dụng tài khoản Google (email FPT) của bạn để tiếp tục.
+              </Text>
+            </div>
+
+            <Divider />
+
+            <Button
+              type='primary'
+              size='large'
+              block
+              icon={<FcGoogle style={{ fontSize: '22px' }} />}
+              onClick={handleGoogleLogin}
               style={{
-                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-                borderRadius: '12px',
-                padding: '24px',
-                maxWidth: '100%',
-                height: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                background: 'white',
+                color: '#444',
+                borderColor: '#d9d9d9',
+                fontWeight: 500,
               }}
             >
-              <Button onClick={handleGoogleLogin}>
-                Đăng nhập bằng tài khoản google
-              </Button>
-            </Card>
-          </Col>
-        </Row>
-      </Content>
+              Đăng nhập với Google
+            </Button>
+
+            <Space
+              direction='vertical'
+              style={{ marginTop: '24px', width: '100%' }}
+            >
+              <Text>
+                <CheckCircleOutlined
+                  style={{ color: '#52c41a', marginRight: '8px' }}
+                />
+                Truy cập kho tài liệu học tập.
+              </Text>
+              <Text>
+                <CheckCircleOutlined
+                  style={{ color: '#52c41a', marginRight: '8px' }}
+                />
+                Tham gia các kỳ thi thử không giới hạn.
+              </Text>
+              <Text>
+                <CheckCircleOutlined
+                  style={{ color: '#52c41a', marginRight: '8px' }}
+                />
+                Theo dõi tiến độ và kết quả cá nhân.
+              </Text>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
     </Layout>
   )
 }

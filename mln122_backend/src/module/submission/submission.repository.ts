@@ -64,4 +64,25 @@ export class SubmissionRepository implements ISubmissionRepository {
       .lean() // Sắp xếp theo ngày tạo mới nhất
       .exec()
   }
+
+  async getExamIdBySubmissionId(submissionId: string): Promise<string | null> {
+    const submission = await this.submissionModel
+      .findById(submissionId)
+      .lean()
+      .exec()
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    return submission ? submission.exam.toString() : null
+  }
+
+  async cancelSubmission(
+    submissionId: string,
+    data: any,
+  ): Promise<SubmissionDocument | null> {
+    return await this.submissionModel
+      .findByIdAndUpdate(submissionId, data, {
+        new: true,
+      })
+      .lean()
+      .exec()
+  }
 }

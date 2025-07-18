@@ -20,6 +20,16 @@ const LoginSuccess = lazy(() => import('../pages/Login/LoginSuccess'))
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 
+const ExamList = lazy(() => import('../pages/ExamList'))
+
+const Test = lazy(() => import('../pages/Test'))
+
+const Result = lazy(() => import('../pages/Result'))
+
+const Profile = lazy(() => import('../pages/Profile'))
+
+const AllResult = lazy(() => import('../pages/AllResult'))
+
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -41,6 +51,26 @@ const routes: LayoutRoute[] = [
         path: '/',
         component: HomePage,
         exact: true,
+      },
+      {
+        path: '/exam/:subjectId',
+        component: ExamList,
+      },
+      {
+        path: '/test/:examId',
+        component: Test,
+      },
+      {
+        path: '/result/:submissionId',
+        component: Result,
+      },
+      {
+        path: '/profile',
+        component: Profile,
+      },
+      {
+        path: '/all-results',
+        component: AllResult,
       },
     ],
   },

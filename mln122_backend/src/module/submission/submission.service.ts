@@ -12,6 +12,7 @@ import { IExamRepository } from '../exam/interfaces/iexam.repository' // Giả �
 import { SubmitExamDto } from './dto/submitExam.dto'
 import { ExamForStudentDto } from '../exam/dto/examForStudent.dto'
 import { SubmissionResponseDto } from './dto/submissionResponse.dto'
+import mongoose from 'mongoose'
 
 // DTO trả về khi người dùng bắt đầu làm bài.
 class StartExamResponseDto {
@@ -73,7 +74,10 @@ export class SubmissionService implements ISubmissionService {
       throw new BadRequestException('Bài thi đã được nộp hoặc đã bị hủy.')
     }
 
-    const exam = await this.examRepository.findById(submission.exam.toString())
+    const examId =
+      await this.submissionRepository.getExamIdBySubmissionId(submissionId)
+
+    const exam = await this.examRepository.findById(examId)
     if (!exam) {
       throw new NotFoundException('Không tìm thấy dữ liệu gốc của bài thi.')
     }
@@ -139,6 +143,9 @@ export class SubmissionService implements ISubmissionService {
     submissionId: string,
     userId: string,
   ): Promise<SubmissionResponseDto | null> {
+    if (!mongoose.Types.ObjectId.isValid(submissionId)) {
+      throw new BadRequestException('ID không hợp lệ.')
+    }
     const submission = await this.submissionRepository.findById(submissionId)
     if (!submission) {
       throw new NotFoundException('Không tìm thấy kết quả làm bài.')
@@ -165,9 +172,20 @@ export class SubmissionService implements ISubmissionService {
       throw new BadRequestException('Không thể hủy một bài thi đã hoàn thành.')
     }
 
-    submission.status = 'canceled'
-    submission.finishedAt = new Date()
-    await submission.save()
+    const data = {
+      status: 'canceled',
+      finishedAt: new Date(),
+      score: 0,
+    }
+
+    const updatedSubmission = await this.submissionRepository.cancelSubmission(
+      submissionId,
+      data,
+    )
+
+    if (!updatedSubmission) {
+      throw new NotFoundException('Hủy bài thi không thành công.')
+    }
 
     return { message: 'Đã hủy bài thi thành công.' }
   }

@@ -33,7 +33,7 @@ const authSlice = createSlice({
         email: decodedToken.email,
         id: decodedToken.id,
         role: decodedToken.role,
-        fullName: decodedToken.name,
+        fullName: decodedToken.fullName,
         picture: decodedToken.picture || '',
         exp: decodedToken.exp,
         iat: decodedToken.iat,
@@ -47,7 +47,7 @@ const authSlice = createSlice({
         expires: expirationDate,
       })
       Cookies.set('userToken', token, { expires: expirationDate })
-      if (state.userData.role === 'Customer') {
+      if (state.userData.role !== '685d54822e239adc055c4abf') {
         window.location.href = '/'
       } else {
         window.location.href = `/${state.userData.role.toLowerCase().replace(/ /g, '-')}`

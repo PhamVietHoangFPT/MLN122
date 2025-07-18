@@ -1,57 +1,97 @@
 import React from 'react'
-import { Layout, Typography, Col, Row } from 'antd'
+import { Layout, Typography, Col, Row, Space } from 'antd'
+import {
+  HeartOutlined, // Thay icon mạng xã hội bằng icon mang tính cá nhân hơn
+} from '@ant-design/icons'
 
 const { Footer } = Layout
-const { Text } = Typography
+const { Title, Text, Link } = Typography
 
-const AppFooter: React.FC = () => {
+const StudentProjectFooter: React.FC = () => {
   return (
     <Footer
       style={{
-        textAlign: 'center',
-        background: '#1890ff',
-        padding: '20px 50px',
+        background: '#262626', // Có thể dùng màu xám đậm để khác với màu xanh của FPT
+        padding: '40px 50px',
+        color: 'rgba(255, 255, 255, 0.65)',
       }}
     >
-      <Row gutter={16}>
-        <Col
-          span={12}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
-        >
-          <Text strong>
-            <h1 style={{ color: '#ffffff' }}>ADN</h1>
-          </Text>{' '}
-          <Text style={{ color: '#ffffff' }}>
-            © {new Date().getFullYear()} - Hệ thống trung tâm xét nghiệm ADN
-            hàng đầu
+      <Row gutter={[48, 48]} justify='center'>
+        {/* === Cột 1: Giới thiệu dự án === */}
+        <Col xs={24} sm={12} md={8} style={{ textAlign: 'left' }}>
+          <Title level={3} style={{ color: 'white', marginBottom: '20px' }}>
+            Góc Học Tập FPT
+          </Title>
+          <Text style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+            Một dự án cá nhân nhỏ,
+            <br />
+            với mong muốn hỗ trợ sinh viên FPT.
           </Text>
-          <br />
-          <Text type='secondary' style={{ color: '#ffffff' }}>
-            An toàn - Uy tín - Chất lượng hàng đầu Việt Nam
-          </Text>
-          <br />
-          <Text type='secondary' style={{ color: '#ffffff' }}>
-            Email: adn@gamil.com | SĐT: 0916306945
-          </Text>
+          <div style={{ marginTop: '20px' }}>
+            <Text style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+              Liên hệ góp ý:{' '}
+            </Text>
+          </div>
         </Col>
-        <Col span={12}>
-          <iframe
-            src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.610010498175!2d106.8076943152967!3d10.841127592277624!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752731176b07b1%3A0xb752b24b379bae5e!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBGUFQgVFAuIEhDTQ!5e0!3m2!1svi!2s!4v1680286377326!5m2!1svi!2s'
-            width='100%'
-            height='200'
-            style={{ border: 0 }}
-            allowFullScreen={false}
-            loading='lazy'
-            referrerPolicy='no-referrer-when-downgrade'
-          />
+
+        {/* === Cột 2: Tài nguyên hữu ích === */}
+        <Col xs={24} sm={12} md={8} style={{ textAlign: 'left' }}>
+          <Title level={4} style={{ color: 'white', marginBottom: '20px' }}>
+            Tài Nguyên Nhanh
+          </Title>
+          <Space direction='vertical' size='small'>
+            <Link
+              href='https://fap.fpt.edu.vn/'
+              target='_blank'
+              style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+            >
+              Cổng thông tin FAP
+            </Link>
+            <Link
+              href='https://lms-hcm.fpt.edu.vn/'
+              target='_blank'
+              style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+            >
+              Hệ thống LMS
+            </Link>
+            <Link
+              href='https://library.fpt.edu.vn/'
+              target='_blank'
+              style={{ color: 'rgba(255, 255, 255, 0.65)' }}
+            >
+              Thư viện số
+            </Link>
+          </Space>
+        </Col>
+
+        {/* === Cột 3: Lưu ý === */}
+        <Col xs={24} sm={12} md={8} style={{ textAlign: 'left' }}>
+          <Title level={4} style={{ color: 'white', marginBottom: '20px' }}>
+            Lưu ý
+          </Title>
+          <Text style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
+            Đây là một dự án độc lập, không phải trang web chính thức của Đại
+            học FPT. Mọi thông tin chỉ mang tính chất tham khảo.
+          </Text>
         </Col>
       </Row>
+
+      {/* === Dòng bản quyền ở dưới cùng === */}
+      <div
+        style={{
+          textAlign: 'center',
+          marginTop: '40px',
+          paddingTop: '20px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+        }}
+      >
+        <Text style={{ color: 'rgba(255, 255, 255, 0.45)' }}>
+          Made with <HeartOutlined /> by an FPTU-er | ©{' '}
+          {new Date().getFullYear()} Góc Học Tập FPT
+        </Text>
+      </div>
     </Footer>
   )
 }
 
-export default AppFooter
+export default StudentProjectFooter
