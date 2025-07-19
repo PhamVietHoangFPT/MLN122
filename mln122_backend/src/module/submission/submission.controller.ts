@@ -7,6 +7,8 @@ import {
   Req,
   Inject,
   UseGuards,
+  Query,
+  ValidationPipe,
 } from '@nestjs/common'
 import {
   ApiTags,
@@ -15,6 +17,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiProperty,
+  ApiQuery,
 } from '@nestjs/swagger'
 import { ISubmissionService } from './interfaces/isubmission.service'
 import { JwtAuthGuard } from 'src/common/guard/auth.guard'
@@ -25,6 +28,8 @@ import { ApiResponseDto } from 'src/common/dto/apiResponse.dto'
 import { SubmissionResponseDto } from './dto/submissionResponse.dto'
 import { SubmitExamDto } from './dto/submitExam.dto' // Điều chỉnh đường dẫn nếu cần
 import { ExamForStudentDto } from '../exam/dto/examForStudent.dto' // Điều chỉnh đường dẫn nếu cần
+import { PaginationQueryDto } from 'src/common/dto/paginationQuery.dto'
+import { PaginatedResponseDto } from 'src/common/dto/paginatedResponse.dto'
 
 // DTO này nên được đặt trong một file riêng (ví dụ: ./dto/start-exam.response.dto.ts)
 // để tuân thủ cấu trúc, nhưng để ở đây cho tiện theo dõi.
@@ -129,17 +134,37 @@ export class SubmissionController {
     description: 'Danh sách các lượt làm bài',
     type: ApiResponseDto<SubmissionResponseDto>,
   })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    type: Number,
+    description: 'Số lượng mục trên mỗi trang',
+  })
+  @ApiQuery({
+    name: 'pageNumber',
+    required: false,
+    type: Number,
+    description: 'Số trang',
+  })
   async getAllSubmissions(
     @Req() req: any,
-  ): Promise<ApiResponseDto<SubmissionResponseDto>> {
+    @Query(
+      new ValidationPipe({
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+        forbidNonWhitelisted: true,
+      }),
+    )
+    paginationQuery: PaginationQueryDto,
+  ): Promise<object> {
     const userId = req.user._id
-    const data = await this.submissionService.getAllSubmissions(userId)
-    return {
-      data: data,
-      message: 'Lấy lịch sử làm bài thành công',
-      statusCode: 200,
-      success: true,
-    }
+    const { pageNumber, pageSize } = paginationQuery
+    const data = await this.submissionService.getAllSubmissions(
+      userId,
+      pageNumber || 1,
+      pageSize || 10,
+    )
+    return data
   }
 
   @Get('submissions/:submissionId')

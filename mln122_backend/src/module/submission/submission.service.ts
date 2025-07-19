@@ -5,6 +5,9 @@ import {
   NotFoundException,
   ForbiddenException,
   BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  Logger,
 } from '@nestjs/common'
 import { ISubmissionService } from './interfaces/isubmission.service'
 import { ISubmissionRepository } from './interfaces/isubmission.repository'
@@ -12,7 +15,11 @@ import { IExamRepository } from '../exam/interfaces/iexam.repository' // Giả �
 import { SubmitExamDto } from './dto/submitExam.dto'
 import { ExamForStudentDto } from '../exam/dto/examForStudent.dto'
 import { SubmissionResponseDto } from './dto/submissionResponse.dto'
-import mongoose from 'mongoose'
+import mongoose, { Model } from 'mongoose'
+import { Submission, SubmissionDocument } from './schemas/submission.schema'
+import { PaginatedResponseDto } from 'src/common/dto/paginatedResponse.dto'
+import { Cron } from '@nestjs/schedule'
+import { InjectModel } from '@nestjs/mongoose'
 
 // DTO trả về khi người dùng bắt đầu làm bài.
 class StartExamResponseDto {
@@ -24,12 +31,68 @@ const GRACE_PERIOD_IN_MS = 5 * 1000 // 5 giây thời gian đệm
 
 @Injectable()
 export class SubmissionService implements ISubmissionService {
+  private readonly logger = new Logger(SubmissionService.name)
+
   constructor(
+    @InjectModel(Submission.name)
+    private readonly submissionModel: Model<SubmissionDocument>,
     @Inject(ISubmissionRepository)
     private readonly submissionRepository: ISubmissionRepository,
     @Inject(IExamRepository)
     private readonly examRepository: IExamRepository,
   ) {}
+
+  @Cron('0 */15 * * * *')
+  async handleOverdueSubmissions() {
+    this.logger.log('Bắt đầu quét các bài thi quá hạn...')
+
+    const inProgressSubmissions = await this.submissionModel.find({
+      status: 'in-progress',
+    })
+
+    if (inProgressSubmissions.length === 0) {
+      this.logger.log('Không tìm thấy bài thi nào đang thực hiện để quét.')
+      return
+    }
+
+    let cancelledCount = 0
+    for (const submission of inProgressSubmissions) {
+      try {
+        // Populate exam để lấy duration
+        const populatedSubmission = await submission.populate('exam')
+        const exam = populatedSubmission.exam as any // Ép kiểu để truy cập duration
+
+        if (!exam || typeof exam.duration !== 'number') {
+          this.logger.warn(
+            `Bỏ qua submission ${submission._id} do không có thông tin exam hoặc duration.`,
+          )
+          continue
+        }
+
+        const durationInMs = exam.duration * 60 * 1000
+        const timeElapsed = Date.now() - submission.startedAt.getTime()
+
+        if (timeElapsed > durationInMs) {
+          this.logger.log(
+            `Phát hiện bài thi quá hạn: ${submission._id}. Đang hủy...`,
+          )
+          // SỬA LỖI: Đổi 'cancelled' thành 'canceled' để khớp với schema
+          submission.status = 'canceled'
+          submission.finishedAt = new Date()
+          submission.score = 0
+          await submission.save()
+          cancelledCount++
+        }
+      } catch (error) {
+        this.logger.error(
+          `Lỗi khi xử lý submission ${submission._id}:`,
+          error.stack,
+        )
+      }
+    }
+
+    this.logger.log(`Hoàn tất quét. Đã hủy ${cancelledCount} bài thi quá hạn.`)
+  }
 
   async startExam(
     examId: string,
@@ -190,10 +253,47 @@ export class SubmissionService implements ISubmissionService {
     return { message: 'Đã hủy bài thi thành công.' }
   }
 
-  async getAllSubmissions(userId: string): Promise<SubmissionResponseDto[]> {
-    const submissions = await this.submissionRepository.findAll({
-      user: userId,
-    })
-    return submissions.map((sub) => new SubmissionResponseDto(sub))
+  async getAllSubmissions(
+    userId: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginatedResponseDto<SubmissionResponseDto>> {
+    const skip = (pageNumber - 1) * pageSize
+    const filter = {}
+    const [submissions, totalItems] = await Promise.all([
+      this.submissionRepository
+        .findWithQuery(filter)
+        .skip(skip)
+        .limit(pageSize)
+        .sort({ createdAt: -1 }),
+      this.submissionRepository.countDocuments(filter),
+    ])
+    if (submissions.length === 0 || !submissions) {
+      throw new ConflictException('Không tìm thấy lượt làm bài nào.')
+    } else {
+      try {
+        const totalPages = Math.ceil(totalItems / pageSize)
+        const data = submissions.map(
+          (submission: SubmissionDocument) =>
+            new SubmissionResponseDto(submission),
+        )
+        return {
+          success: true,
+          message: 'Danh sách lượt làm bài đã được lấy thành công.',
+          statusCode: 200,
+          data,
+          pagination: {
+            totalItems,
+            totalPages,
+            currentPage: pageNumber,
+            pageSize,
+          },
+        }
+      } catch (error) {
+        throw new InternalServerErrorException(
+          'Lỗi khi lấy danh sách kit shipment.',
+        )
+      }
+    }
   }
 }

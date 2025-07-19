@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
-import { FilterQuery, Model } from 'mongoose'
+import mongoose, { FilterQuery, Model } from 'mongoose'
 import { Submission, SubmissionDocument } from './schemas/submission.schema'
 import { ISubmissionRepository } from './interfaces/isubmission.repository'
 
@@ -84,5 +84,20 @@ export class SubmissionRepository implements ISubmissionRepository {
       })
       .lean()
       .exec()
+  }
+
+  findWithQuery(
+    filter: Record<string, unknown>,
+  ): mongoose.Query<SubmissionDocument[], SubmissionDocument> {
+    return this.submissionModel
+      .find(filter)
+      .populate({ path: 'user', select: 'fullName email' }) // Ví dụ populate user
+      .populate({ path: 'exam', select: 'title examCode' }) // Ví dụ populate exam
+      .sort({ startedAt: -1 })
+      .lean()
+  }
+
+  async countDocuments(filter: Record<string, unknown>): Promise<number> {
+    return await this.submissionModel.countDocuments(filter).exec()
   }
 }

@@ -8,11 +8,13 @@ import { RoleModule } from './module/role/role.module'
 import { SubjectModule } from './module/subject/subject.module'
 import { ExamModule } from './module/exam/exam.module'
 import { SubmissionModule } from './module/submission/submission.module'
+import { ScheduleModule } from '@nestjs/schedule'
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     databaseConfig,
     AuthModule,
     RoleModule,

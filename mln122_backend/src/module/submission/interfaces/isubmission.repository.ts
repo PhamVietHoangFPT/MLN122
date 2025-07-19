@@ -1,4 +1,4 @@
-import { FilterQuery } from 'mongoose'
+import mongoose, { FilterQuery } from 'mongoose'
 import { SubmissionDocument } from '../schemas/submission.schema'
 
 type InitialSubmissionData = {
@@ -32,6 +32,10 @@ export interface ISubmissionRepository {
     submissionId: string,
     data: any,
   ): Promise<SubmissionDocument | null>
+  findWithQuery(
+    filter: Record<string, unknown>,
+  ): mongoose.Query<SubmissionDocument[], SubmissionDocument>
+  countDocuments(filter: Record<string, unknown>): Promise<number>
 }
 
 export const ISubmissionRepository = Symbol('ISubmissionRepository')

@@ -3,6 +3,7 @@
 import { SubmitExamDto } from '../dto/submitExam.dto'
 import { ExamForStudentDto } from 'src/module/exam/dto/examForStudent.dto'
 import { SubmissionResponseDto } from '../dto/submissionResponse.dto'
+import { PaginatedResponseDto } from 'src/common/dto/paginatedResponse.dto'
 
 /**
  * DTO trả về khi người dùng bắt đầu làm bài.
@@ -32,7 +33,11 @@ export interface ISubmissionService {
     userId: string,
   ): Promise<{ message: string }>
 
-  getAllSubmissions(userId: string): Promise<SubmissionResponseDto[]>
+  getAllSubmissions(
+    userId: string,
+    pageNumber: number,
+    pageSize: number,
+  ): Promise<PaginatedResponseDto<SubmissionResponseDto>>
 }
 
 export const ISubmissionService = Symbol('ISubmissionService')
