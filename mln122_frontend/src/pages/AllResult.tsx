@@ -1,10 +1,23 @@
 import { useGetSubmissionsQuery } from '../features/submissionAPI'
 import ProfileNavbar from '../components/layout/Navbar/ProfileNavbar'
-import { Layout, Typography, Table, Tag, Button, Spin, Alert } from 'antd'
+import {
+  Layout,
+  Typography,
+  Table,
+  Tag,
+  Button,
+  Spin,
+  Alert,
+  Pagination,
+} from 'antd'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import type { ColumnsType } from 'antd/es/table'
-
+import { useSearchParams } from 'react-router-dom'
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+dayjs.extend(utc)
+dayjs.extend(timezone)
 const { Content } = Layout
 const { Title } = Typography
 
@@ -21,14 +34,19 @@ interface SubmissionHistory {
 }
 
 export default function AllResult() {
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const pageNumber = Number(searchParams.get('pageNumber')) || 1
+  let pageSize = Number(searchParams.get('pageSize')) || 10
+  if (![10, 15, 20].includes(pageSize)) {
+    pageSize = 10 // Mặc định nếu không hợp lệ
+  }
   const {
     data: submissionResponse,
     isLoading,
     isError,
     error,
-  } = useGetSubmissionsQuery()
-  const navigate = useNavigate()
-
+  } = useGetSubmissionsQuery({ pageSize, pageNumber })
   // Hàm chuyển đổi trạng thái sang tiếng Việt và gán màu
   const translateStatus = (status: string) => {
     switch (status) {
@@ -42,7 +60,12 @@ export default function AllResult() {
         return <Tag>{status}</Tag>
     }
   }
-
+  const formatVietnamTime = (dateString: string) => {
+    return dayjs
+      .utc(dateString)
+      .tz('Asia/Ho_Chi_Minh')
+      .format('HH:mm DD/MM/YYYY')
+  }
   // Định nghĩa các cột cho bảng
   const columns: ColumnsType<SubmissionHistory> = [
     {
@@ -66,15 +89,21 @@ export default function AllResult() {
       title: 'Điểm số',
       dataIndex: 'score',
       key: 'score',
-      render: (score) => <strong>{score} / 10</strong>,
-      width: '10%',
+      align: 'center',
+      render: (score) => (
+        <Tag color={score >= 5 ? 'green' : 'red'} style={{ fontSize: '14px' }}>
+          {score} / 10
+        </Tag>
+      ),
+      width: '15%',
     },
+    // --- CỘT THỜI GIAN ĐÃ ĐƯỢC THAY ĐỔI ---
     {
-      title: 'Ngày làm bài',
-      dataIndex: 'finishedAt',
-      key: 'finishedAt',
-      render: (date) => dayjs(date).format('HH:mm DD/MM/YYYY'), // Định dạng ngày
-      width: '20%',
+      title: 'Thời gian bắt đầu',
+      dataIndex: 'startedAt',
+      key: 'startedAt',
+      render: (date) => formatVietnamTime(date),
+      width: '25%',
     },
     {
       title: 'Trạng thái',
@@ -138,6 +167,36 @@ export default function AllResult() {
           loading={isLoading}
           rowKey='_id' // Sử dụng _id làm key cho mỗi dòng
           bordered
+          pagination={false}
+        />
+        <Pagination
+          current={pageNumber}
+          pageSize={pageSize}
+          total={submissionResponse?.pagination.totalItems || 0}
+          showTotal={(total) => `Tổng ${total} lượt làm bài`}
+          onChange={(page, pageSize) => {
+            navigate(`/all-results?pageNumber=${page}&pageSize=${pageSize}`)
+          }}
+          showSizeChanger
+          pageSizeOptions={['10', '15', '20']}
+          locale={{
+            items_per_page: ' mục mỗi trang',
+            jump_to: 'Đến',
+            jump_to_confirm: 'Xác nhận',
+            page: 'Trang',
+            prev_page: 'Trước',
+            next_page: 'Sau',
+            prev_5: 'Trước 5',
+            next_5: 'Sau 5',
+            prev_3: 'Trước 3',
+            next_3: 'Sau 3',
+          }}
+          style={{
+            marginTop: '20px',
+            textAlign: 'right',
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}
         />
       </Content>
     </div>

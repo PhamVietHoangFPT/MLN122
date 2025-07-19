@@ -25,7 +25,7 @@ export default function ProfileNavbar() {
       icon: <UserOutlined />,
     },
     {
-      key: '/all-results',
+      key: '/all-results?pageNumber=1&pageSize=10',
       label: 'Lịch sử làm bài',
       icon: <HistoryOutlined />,
     },

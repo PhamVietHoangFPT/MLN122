@@ -26,6 +26,8 @@ import {
   ArrowLeftOutlined,
   ArrowRightOutlined,
   ExclamationCircleFilled,
+  FlagFilled,
+  FlagOutlined,
 } from '@ant-design/icons'
 import type { RadioChangeEvent } from 'antd'
 import type { UserProfile } from '../types/userProfile'
@@ -68,6 +70,10 @@ const ExamUI = ({
   const [submitSubmission, { isLoading: isSubmitting }] =
     useSubmitSubmissionMutation()
 
+  const [flaggedQuestions, setFlaggedQuestions] = useState<
+    Record<number, boolean>
+  >({})
+
   const [cancelSubmission] = useCancelSubmissionMutation()
   const [isExamInProgress, setIsExamInProgress] = useState(true)
   const blocker = useBlocker(isExamInProgress)
@@ -93,21 +99,21 @@ const ExamUI = ({
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      // Dòng này cần thiết để một số trình duyệt hiển thị thông báo xác nhận
       event.preventDefault()
-      event.returnValue =
-        'Bạn có chắc chắn muốn rời khỏi trang này? Bài làm của bạn sẽ không được lưu lại.'
-      cancelSubmission(submissionId)
+      event.returnValue = '' // Một số trình duyệt yêu cầu gán giá trị này
+      // Sử dụng sendBeacon để đảm bảo request được gửi đi
+      navigator.sendBeacon(
+        `http://localhost:5000/api/submissions/${submissionId}/cancel`,
+        new Blob()
+      )
     }
 
-    // Thêm event listener khi component được mount
     window.addEventListener('beforeunload', handleBeforeUnload)
 
-    // Gỡ bỏ event listener khi component bị unmount (rất quan trọng)
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
-  }, [submissionId, cancelSubmission])
+  }, [submissionId])
 
   const currentQuestion = exam.questions[currentQuestionIndex]
 
@@ -123,8 +129,19 @@ const ExamUI = ({
     })
   }
 
-  const handleSubmitTimer = async () => {
-    // Thêm kiểm tra để tránh gọi hàm này nhiều lần
+  const handleManualSubmit = () => {
+    confirm({
+      title: 'Bạn chắc chắn muốn nộp bài?',
+      icon: <ExclamationCircleFilled />,
+      content: 'Sau khi nộp, bạn sẽ không thể thay đổi câu trả lời.',
+      okText: 'Nộp bài',
+      cancelText: 'Hủy',
+      centered: true,
+      onOk: () => handleSubmit(),
+    })
+  }
+
+  const handleSubmit = async (isTimeUp = false) => {
     if (isSubmitting) return
 
     try {
@@ -136,56 +153,56 @@ const ExamUI = ({
         })),
       }
       await submitSubmission(payload).unwrap()
-      setIsExamInProgress(false)
-      alert('Hết giờ! Bài làm của bạn đã được nộp tự động.')
-      navigate(`/result/${submissionId}`)
-    } catch (err) {
-      alert('Có lỗi xảy ra khi nộp bài.')
-      console.error('Submit error:', err)
-    }
-  }
+      setIsExamInProgress(false) // Tắt blocker trước khi điều hướng
 
-  const handleSubmit = async () => {
-    // Thêm kiểm tra để tránh gọi hàm này nhiều lần
-    if (isSubmitting) return
-
-    try {
-      const payload = {
-        submissionId,
-        answers: Object.entries(userAnswers).map(([qNo, ansCode]) => ({
-          questionNo: Number(qNo),
-          chosenAnswerCode: ansCode,
-        })),
+      if (isTimeUp) {
+        notification.success({
+          message: 'Hết giờ!',
+          description: 'Bài làm của bạn đã được nộp tự động.',
+          placement: 'topRight',
+        })
+      } else {
+        notification.success({
+          message: 'Nộp bài thành công!',
+          description: 'Đang chuyển đến trang kết quả.',
+          placement: 'topRight',
+        })
       }
-      await submitSubmission(payload).unwrap()
-      setIsExamInProgress(false)
-      alert('Bài làm của bạn đã được nộp thành công.')
+
       navigate(`/result/${submissionId}`)
     } catch (err) {
-      alert('Có lỗi xảy ra khi nộp bài.')
+      notification.error({
+        message: 'Nộp bài thất bại',
+        description: 'Có lỗi xảy ra khi nộp bài. Vui lòng thử lại.',
+        placement: 'topRight',
+      })
       console.error('Submit error:', err)
     }
   }
-
-  if (!exam.questions[currentQuestionIndex]) return null
-
-  if (!currentQuestion) return null
 
   const shuffledNavQuestions = useMemo(() => {
     const questionsWithOriginalIndex = exam.questions.map((q, index) => ({
       questionData: q,
       originalIndex: index,
     }))
-    // Xáo trộn mảng
     return questionsWithOriginalIndex.sort(() => Math.random() - 0.5)
   }, [exam.questions])
+
+  const handleToggleFlag = () => {
+    const questionNo = currentQuestion.questionNo
+    setFlaggedQuestions((prev) => ({
+      ...prev,
+      [questionNo]: !prev[questionNo],
+    }))
+  }
+
+  if (!currentQuestion) return null
 
   return (
     <Layout style={{ height: '100%', background: '#f0f2f5' }}>
       <ConfigProvider
         theme={{
           token: {
-            // Đặt màu chủ đạo thành màu bạn muốn
             colorPrimary: '#262626',
           },
         }}
@@ -198,66 +215,65 @@ const ExamUI = ({
             borderRight: '1px solid #e8e8e8',
           }}
         >
-          {/* === THÊM MỚI: Đồng hồ đếm ngược === */}
           <Card
-            variant={'borderless'}
+            bordered={false}
             style={{ textAlign: 'center', marginBottom: '16px' }}
           >
-            <Statistic.Timer
-              type='countdown'
+            <Statistic.Countdown
               title='Thời gian còn lại'
               value={deadline}
-              onFinish={handleSubmitTimer}
+              onFinish={() => handleSubmit(true)}
               format='mm:ss'
             />
           </Card>
-          {/* ==================================== */}
 
           <Title level={4}>Danh sách câu hỏi</Title>
           <Divider />
           <Row gutter={[8, 8]}>
-            {shuffledNavQuestions.map((item) => (
-              <Col span={6} key={item.questionData.questionNo}>
-                <Button
-                  shape='circle'
-                  // Kiểm tra câu trả lời dựa trên questionNo
-                  type={
-                    userAnswers[item.questionData.questionNo]
-                      ? 'primary'
-                      : 'default'
-                  }
-                  // Dùng chỉ số gốc để điều hướng đến đúng câu hỏi
-                  onClick={() => setCurrentQuestionIndex(item.originalIndex)}
-                  style={{
-                    // So sánh với chỉ số gốc để xác định câu hỏi đang được chọn
-                    borderColor:
-                      currentQuestionIndex === item.originalIndex
-                        ? '#262626'
-                        : undefined,
-                    fontWeight:
-                      currentQuestionIndex === item.originalIndex
-                        ? 'bold'
-                        : 'normal',
-                    backgroundColor:
-                      currentQuestionIndex === item.originalIndex
-                        ? '#262626'
-                        : undefined,
-                    color:
-                      currentQuestionIndex === item.originalIndex
-                        ? '#fff'
-                        : undefined,
-                  }}
-                >
-                  {item.questionData.questionNo}
-                </Button>
-              </Col>
-            ))}
+            {shuffledNavQuestions.map((item) => {
+              const isCurrent = currentQuestionIndex === item.originalIndex
+              const isAnswered = !!userAnswers[item.questionData.questionNo]
+              const isFlagged = !!flaggedQuestions[item.questionData.questionNo]
+
+              const buttonStyle: React.CSSProperties = {
+                fontWeight: isCurrent ? 'bold' : 'normal',
+              }
+
+              if (isFlagged) {
+                buttonStyle.backgroundColor = '#d3af37'
+                buttonStyle.borderColor = '#d3af37'
+                buttonStyle.color = '#fff'
+              }
+
+              if (isCurrent) {
+                buttonStyle.backgroundColor = '#262626'
+                buttonStyle.borderColor = '#262626'
+                buttonStyle.color = '#fff'
+              }
+
+              return (
+                <Col span={6} key={item.questionData.questionNo}>
+                  <Button
+                    shape='circle'
+                    type={
+                      isAnswered && !isFlagged && !isCurrent
+                        ? 'primary'
+                        : 'default'
+                    }
+                    onClick={() => setCurrentQuestionIndex(item.originalIndex)}
+                    style={buttonStyle}
+                  >
+                    {item.questionData.questionNo}
+                  </Button>
+                </Col>
+              )
+            })}
           </Row>
           <Button
             type='primary'
             danger
             block
-            onClick={handleSubmit}
+            onClick={handleManualSubmit}
             loading={isSubmitting}
             style={{ marginTop: '24px' }}
           >
@@ -267,7 +283,31 @@ const ExamUI = ({
 
         <Content style={{ padding: '24px 48px' }}>
           <Card>
-            <Title level={4}>{currentQuestion.title}</Title>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Title level={4} style={{ margin: 0 }}>
+                Câu {currentQuestion.questionNo}: {currentQuestion.title}
+              </Title>
+              <Button
+                type='text'
+                shape='circle'
+                icon={
+                  flaggedQuestions[currentQuestion.questionNo] ? (
+                    <FlagFilled
+                      style={{ color: '#d3af37', fontSize: '32px' }}
+                    />
+                  ) : (
+                    <FlagOutlined style={{ fontSize: '32px' }} />
+                  )
+                }
+                onClick={handleToggleFlag}
+              />
+            </div>
             <Radio.Group
               onChange={handleAnswerChange}
               value={userAnswers[currentQuestion.questionNo]}
@@ -317,8 +357,16 @@ const ExamUI = ({
 // === Component chính để bắt đầu bài thi ===
 export default function Test() {
   const { examId } = useParams<{ examId: string }>()
+
+  // === SỬA LỖI: Di chuyển tất cả các hook lên đầu ===
   const [startExam, { data: submissionResponse, isLoading, isSuccess, error }] =
     useStartExamMutation()
+
+  const userData: UserProfile | null = useMemo(() => {
+    const data = Cookies.get('userData')
+    return data ? JSON.parse(data) : null
+  }, [])
+  // ===============================================
 
   const handleStartExam = () => {
     confirm({
@@ -339,7 +387,6 @@ export default function Test() {
           startExam(examId)
         }
       },
-      // Hàm sẽ được gọi khi người dùng nhấn "Hủy"
       onCancel() {
         notification.info({
           message: 'Đã hủy bắt đầu bài thi.',
@@ -350,7 +397,12 @@ export default function Test() {
     })
   }
 
-  // Nếu đang gọi API để bắt đầu -> hiển thị loading
+  // Kiểm tra đăng nhập trước
+  if (!userData) {
+    return <DoesnotLoginYet />
+  }
+
+  // Các câu lệnh return có điều kiện cho API
   if (isLoading) {
     return (
       <div
@@ -366,7 +418,6 @@ export default function Test() {
     )
   }
 
-  // Nếu gọi API có lỗi
   if (error) {
     return (
       <Alert
@@ -378,9 +429,7 @@ export default function Test() {
     )
   }
 
-  // Nếu đã gọi API thành công -> hiển thị giao diện làm bài
   if (isSuccess && submissionResponse) {
-    // API trả về mảng, ta lấy phần tử đầu tiên
     const submissionData = submissionResponse.data[0]
     return (
       <ExamUI
@@ -388,15 +437,6 @@ export default function Test() {
         submissionId={submissionData.submissionId}
       />
     )
-  }
-
-  const userData: UserProfile | null = useMemo(() => {
-    const data = Cookies.get('userData')
-    return data ? JSON.parse(data) : null
-  }, [])
-
-  if (!userData) {
-    return <DoesnotLoginYet />
   }
 
   // Giao diện ban đầu -> nút bắt đầu

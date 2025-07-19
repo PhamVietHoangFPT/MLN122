@@ -5,9 +5,13 @@ export const submissionApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // === QUERIES (Lấy dữ liệu) ===
 
-    // 1. GET /api/submissions -> Lấy lịch sử các bài đã làm
-    getSubmissions: builder.query<Submission[], void>({
-      query: () => '/submissions',
+    // 1. GET /api/submissions?pageSize={pageSize}&pageNumber={pageNumber} -> Lấy lịch sử các bài đã làm với phân trang
+    getSubmissions: builder.query<
+      Submission[],
+      { pageSize: number; pageNumber: number }
+    >({
+      query: ({ pageSize, pageNumber }) =>
+        `/submissions?pageSize=${pageSize}&pageNumber=${pageNumber}`,
       providesTags: ['submissions'],
     }),
 
