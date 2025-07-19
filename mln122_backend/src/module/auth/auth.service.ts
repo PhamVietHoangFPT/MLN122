@@ -32,15 +32,15 @@ export class AuthService {
       )
     }
 
-    // // --- BƯỚC VALIDATE EMAIL ---
-    // const requiredDomain = '@fpt.edu.vn'
-    // if (!googleUser.email.toLowerCase().endsWith(requiredDomain)) {
-    //   // Nếu email không đúng domain, ném ra lỗi và dừng toàn bộ quá trình
-    //   throw new ForbiddenException(
-    //     `Truy cập bị từ chối. Chỉ những tài khoản có email FPT (${requiredDomain}) mới được phép sử dụng hệ thống.`,
-    //   )
-    // }
-    // // --- KẾT THÚC VALIDATE EMAIL ---
+    // --- BƯỚC VALIDATE EMAIL ---
+    const requiredDomain = '@fpt.edu.vn'
+    if (!googleUser.email.toLowerCase().endsWith(requiredDomain)) {
+      // Nếu email không đúng domain, ném ra lỗi và dừng toàn bộ quá trình
+      throw new ForbiddenException(
+        `Truy cập bị từ chối. Chỉ những tài khoản có email FPT (${requiredDomain}) mới được phép sử dụng hệ thống.`,
+      )
+    }
+    // --- KẾT THÚC VALIDATE EMAIL ---
 
     // Nếu email hợp lệ, tiếp tục logic như cũ...
     let user = await this.userModel.findOne({ email: googleUser.email })
