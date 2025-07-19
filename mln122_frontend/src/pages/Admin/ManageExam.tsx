@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useGetExamsQuery,
   useDeleteExamMutation,
@@ -38,17 +39,29 @@ const { Content } = Layout
 const { Title } = Typography
 const { confirm } = Modal
 
+interface Answer {
+  answerCode: string
+  answerText: string
+}
 // Định nghĩa kiểu dữ liệu
 interface Subject {
   _id: string
   subjectName: string
 }
+interface Question {
+  questionNo: number
+  title: string
+  answers: Answer[]
+  correctAnswerCode: string
+}
+
 interface Exam {
   _id: string
   examCode: string
   title: string
   duration: number
   subject: Subject
+  questions?: Question[]
 }
 
 export default function ManageExam() {
@@ -489,9 +502,17 @@ export default function ManageExam() {
             </Space>
           </div>
 
-          <Table
+          <Table<Exam>
             columns={columns}
-            dataSource={examResponse?.data}
+            dataSource={examResponse?.data?.map((exam: any) => ({
+              ...exam,
+              subject:
+                typeof exam.subject === 'string'
+                  ? subjectResponse?.data.find(
+                      (s: Subject) => s._id === exam.subject
+                    ) || { _id: '', subjectName: '' }
+                  : exam.subject,
+            }))}
             loading={isLoadingExams || isLoadingSubjects}
             rowKey='_id'
             bordered

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react'
 import {
   useGetSubjectsQuery,
@@ -48,7 +49,7 @@ export default function ManageSubject() {
     isError,
     error,
     refetch, // <-- Thêm refetch để làm mới dữ liệu
-  } = useGetSubjectsQuery({})
+  } = useGetSubjectsQuery()
 
   const [deleteSubject, { isLoading: isDeleting }] = useDeleteSubjectMutation()
   const [createSubject, { isLoading: isCreating }] = useCreateSubjectMutation()

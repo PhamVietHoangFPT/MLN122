@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams, useNavigate } from 'react-router-dom'
 import { useGetSubmissionByIdQuery } from '../features/submissionAPI'
 import {
@@ -75,7 +76,7 @@ export default function Result() {
   }
 
   // --- Tính toán các thông số ---
-  const correctAnswersCount = submission.answers.filter(
+  const correctAnswersCount = (submission.answers ?? []).filter(
     (a) => a.isCorrect
   ).length
   const totalQuestions = submission.exam.questions.length
@@ -84,8 +85,8 @@ export default function Result() {
   )
 
   // --- Hàm xác định style cho từng câu trả lời ---
-  const getAnswerStyle = (question, answerCode) => {
-    const userAnswer = submission.answers.find(
+  const getAnswerStyle = (question: any, answerCode: any) => {
+    const userAnswer = submission.answers?.find(
       (a) => a.questionNo === question.questionNo
     )
 
@@ -160,8 +161,8 @@ export default function Result() {
           Xem lại chi tiết bài làm
         </Title>
 
-        {submission.exam.questions.map((question) => {
-          const userAnswer = submission.answers.find(
+        {submission.exam.questions.map((question: any) => {
+          const userAnswer = submission.answers?.find(
             (a) => a.questionNo === question.questionNo
           )
 
@@ -178,7 +179,7 @@ export default function Result() {
               </Text>
               <Divider style={{ margin: '12px 0' }} />
               <Space direction='vertical' style={{ width: '100%' }}>
-                {question.answers.map((answer) => {
+                {question.answers.map((answer: any) => {
                   const style = getAnswerStyle(question, answer.answerCode)
                   return (
                     <div

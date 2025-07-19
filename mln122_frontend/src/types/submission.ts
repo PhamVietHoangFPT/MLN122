@@ -1,3 +1,4 @@
+import type { valueType } from 'antd/es/statistic/utils'
 import type { Exam } from './exam'
 import type { Question } from './exam'
 
@@ -10,6 +11,7 @@ interface Answers {
 export interface Submission {
   data: [
     {
+      score: valueType | undefined
       submissionId: string
       user: string
       exam: Exam

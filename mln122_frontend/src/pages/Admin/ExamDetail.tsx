@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   useGetExamByIdQuery,
@@ -32,31 +33,8 @@ import {
 import { useEffect, useState } from 'react'
 
 const { Content } = Layout
-const { Title, Text } = Typography
+const { Text } = Typography
 const { confirm } = Modal
-
-// --- Định nghĩa các kiểu dữ liệu ---
-interface Answer {
-  answerCode: string
-  answerText: string
-}
-interface Question {
-  questionNo: number
-  title: string
-  correctAnswerCode: string
-  answers: Answer[]
-}
-interface Exam {
-  _id: string
-  examCode: string
-  title: string
-  duration: number
-  subject: {
-    _id: string
-    subjectName: string
-  }
-  questions: Question[]
-}
 
 export default function ExamDetail() {
   const { examId } = useParams<{ examId: string }>()
@@ -245,14 +223,14 @@ export default function ExamDetail() {
                       rules={[{ required: true }]}
                     >
                       <Select placeholder='Chọn môn học'>
-                        <Select.Option value={exam?.subject._id}>
-                          {exam?.subject.subjectName}
+                        <Select.Option value={exam?.subject?._id}>
+                          {exam?.subject?.subjectName}
                         </Select.Option>
                         {/* Thêm các môn học khác ở đây */}
                       </Select>
                     </Form.Item>
                   ) : (
-                    exam?.subject.subjectName
+                    exam?.subject?.subjectName
                   )}
                 </Descriptions.Item>
               </Descriptions>
@@ -358,7 +336,7 @@ export default function ExamDetail() {
                                   name,
                                   'answers',
                                 ]) || []
-                              ).map((ans) => (
+                              ).map((ans: any) => (
                                 <Select.Option
                                   key={ans.answerCode}
                                   value={ans.answerCode}

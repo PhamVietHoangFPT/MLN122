@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useGetSubmissionsQuery } from '../features/submissionAPI'
 import ProfileNavbar from '../components/layout/Navbar/ProfileNavbar'
 import {
@@ -41,12 +42,26 @@ export default function AllResult() {
   if (![10, 15, 20].includes(pageSize)) {
     pageSize = 10 // Mặc định nếu không hợp lệ
   }
+  interface SubmissionResponse {
+    data: SubmissionHistory[]
+    pagination?: {
+      totalItems: number
+      [key: string]: any
+    }
+    [key: string]: any
+  }
+
   const {
     data: submissionResponse,
     isLoading,
     isError,
     error,
-  } = useGetSubmissionsQuery({ pageSize, pageNumber })
+  } = useGetSubmissionsQuery({ pageSize, pageNumber }) as {
+    data?: SubmissionResponse
+    isLoading: boolean
+    isError: boolean
+    error?: any
+  }
   // Hàm chuyển đổi trạng thái sang tiếng Việt và gán màu
   const translateStatus = (status: string) => {
     switch (status) {
@@ -163,7 +178,11 @@ export default function AllResult() {
         </Title>
         <Table
           columns={columns}
-          dataSource={submissionResponse?.data}
+          dataSource={
+            Array.isArray(submissionResponse?.data)
+              ? submissionResponse.data
+              : []
+          }
           loading={isLoading}
           rowKey='_id' // Sử dụng _id làm key cho mỗi dòng
           bordered
@@ -172,7 +191,15 @@ export default function AllResult() {
         <Pagination
           current={pageNumber}
           pageSize={pageSize}
-          total={submissionResponse?.pagination.totalItems || 0}
+          total={
+            typeof submissionResponse === 'object' &&
+            submissionResponse !== null &&
+            'pagination' in submissionResponse &&
+            submissionResponse.pagination &&
+            typeof submissionResponse.pagination.totalItems === 'number'
+              ? submissionResponse.pagination.totalItems
+              : 0
+          }
           showTotal={(total) => `Tổng ${total} lượt làm bài`}
           onChange={(page, pageSize) => {
             navigate(`/all-results?pageNumber=${page}&pageSize=${pageSize}`)

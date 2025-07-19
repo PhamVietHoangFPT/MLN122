@@ -431,12 +431,18 @@ export default function Test() {
 
   if (isSuccess && submissionResponse) {
     const submissionData = submissionResponse.data[0]
-    return (
-      <ExamUI
-        exam={submissionData.exam}
-        submissionId={submissionData.submissionId}
-      />
-    )
+    // Ensure exam object has all required properties
+    const exam: Exam = {
+      _id: submissionData.exam._id,
+      title:
+        typeof submissionData.exam.title === 'string' &&
+        submissionData.exam.title
+          ? submissionData.exam.title
+          : 'Đề thi',
+      duration: submissionData.exam.duration,
+      questions: submissionData.exam.questions,
+    }
+    return <ExamUI exam={exam} submissionId={submissionData.submissionId} />
   }
 
   // Giao diện ban đầu -> nút bắt đầu
