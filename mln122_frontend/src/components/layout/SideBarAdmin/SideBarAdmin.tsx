@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Layout, Menu, Input, Avatar, Button, Tooltip, Divider } from 'antd' // Thêm Spin
+import {
+  Layout,
+  Menu,
+  Input,
+  Avatar,
+  Button,
+  Tooltip,
+  Divider,
+  ConfigProvider,
+} from 'antd' // Thêm Spin
 import {
   SearchOutlined,
   UserOutlined,
@@ -106,7 +115,7 @@ export const SideBar = () => {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <MedicineBoxOutlined style={{ color: '#1890ff', fontSize: 20 }} />
+          <ExperimentOutlined style={{ color: '#262626', fontSize: 20 }} />
           {!collapsed && (
             <span style={{ marginLeft: 12, fontWeight: 600 }}>VacciTrack</span>
           )}
@@ -143,15 +152,28 @@ export const SideBar = () => {
       )}
 
       {/* Navigation Menu */}
-      <Menu
-        mode='inline'
-        selectedKeys={getSelectedKeys()}
-        defaultOpenKeys={
-          getSelectedKeys().length > 0 ? [getSelectedKeys()[0]] : []
-        }
-        style={{ borderRight: 0 }}
-        items={items}
-      />
+      <ConfigProvider
+        theme={{
+          components: {
+            Menu: {
+              // Màu nền của item khi được chọn
+              itemSelectedBg: '#262626',
+              // Màu chữ của item khi được chọn
+              itemSelectedColor: '#ffffff',
+            },
+          },
+        }}
+      >
+        <Menu
+          mode='inline'
+          selectedKeys={getSelectedKeys()}
+          defaultOpenKeys={
+            getSelectedKeys().length > 0 ? [getSelectedKeys()[0]] : []
+          }
+          style={{ borderRight: 0 }}
+          items={items}
+        />
+      </ConfigProvider>
 
       {/* User Profile */}
       <div
