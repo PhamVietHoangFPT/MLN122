@@ -105,8 +105,8 @@ export default function ManageSubject() {
   const columns: ColumnsType<Subject> = [
     {
       title: 'STT',
-      dataIndex: 'key',
-      render: (index) => index + 1,
+      dataIndex: '_id',
+      render: (_: any, __: Subject, index: number) => index + 1,
       width: '10%',
     },
     {

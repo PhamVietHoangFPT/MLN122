@@ -268,7 +268,7 @@ export class SubmissionService implements ISubmissionService {
     pageSize: number,
   ): Promise<PaginatedResponseDto<SubmissionResponseDto>> {
     const skip = (pageNumber - 1) * pageSize
-    const filter = {}
+    const filter = { user: userId }
     const [submissions, totalItems] = await Promise.all([
       this.submissionRepository
         .findWithQuery(filter)
@@ -299,9 +299,7 @@ export class SubmissionService implements ISubmissionService {
           },
         }
       } catch (error) {
-        throw new InternalServerErrorException(
-          'Lỗi khi lấy danh sách kit shipment.',
-        )
+        throw new InternalServerErrorException('Lỗi khi lấy danh sách nộp bài.')
       }
     }
   }

@@ -146,7 +146,7 @@ export default function ManageExam() {
   const columns: ColumnsType<Exam> = [
     {
       title: 'STT',
-      render: (index) => index + 1,
+      render: (_: any, __: any, index: number) => index + 1,
       width: '5%',
     },
     {

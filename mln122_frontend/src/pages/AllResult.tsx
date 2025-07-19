@@ -85,8 +85,8 @@ export default function AllResult() {
   const columns: ColumnsType<SubmissionHistory> = [
     {
       title: 'STT',
-      dataIndex: 'key',
-      render: (index) => index + 1,
+      render: (_text: any, _record: SubmissionHistory, index: number) =>
+        index + 1,
       width: '5%',
     },
     {
