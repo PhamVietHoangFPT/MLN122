@@ -26,6 +26,7 @@ export class ExamRepository implements IExamRepository {
     return this.examModel
       .find({
         subject: query.subjectId,
+        deleted_at: null,
       })
       .select('examCode title duration')
       .populate({

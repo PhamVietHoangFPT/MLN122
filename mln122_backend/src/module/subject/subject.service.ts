@@ -8,7 +8,7 @@ import { Subject } from './schemas/subject.schema'
 import { ISubjectRepository } from './interfaces/isubject.repository'
 import { SubjectResponseDto } from './dto/subjectResponse.dto'
 import { ISubjectService } from './interfaces/isubject.service'
-import { Types } from 'mongoose'
+import { isValidObjectId, Types } from 'mongoose'
 import { CreateSubjectDto } from './dto/createSubject.dto'
 @Injectable()
 export class SubjectService implements ISubjectService {
@@ -47,6 +47,9 @@ export class SubjectService implements ISubjectService {
   }
 
   async getSubjectById(id: string): Promise<SubjectResponseDto | null> {
+    if (!isValidObjectId(id)) {
+      throw new NotFoundException('ID môn học không hợp lệ')
+    }
     const subject = await this.subjectRepository.getSubjectById(id)
     if (!subject) {
       throw new NotFoundException(`Không tìm thấy môn học với ID ${id}`)

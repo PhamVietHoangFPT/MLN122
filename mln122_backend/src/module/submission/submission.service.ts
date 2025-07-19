@@ -15,7 +15,7 @@ import { IExamRepository } from '../exam/interfaces/iexam.repository' // Giả �
 import { SubmitExamDto } from './dto/submitExam.dto'
 import { ExamForStudentDto } from '../exam/dto/examForStudent.dto'
 import { SubmissionResponseDto } from './dto/submissionResponse.dto'
-import mongoose, { Model } from 'mongoose'
+import mongoose, { isValidObjectId, Model } from 'mongoose'
 import { Submission, SubmissionDocument } from './schemas/submission.schema'
 import { PaginatedResponseDto } from 'src/common/dto/paginatedResponse.dto'
 import { Cron } from '@nestjs/schedule'
@@ -98,6 +98,9 @@ export class SubmissionService implements ISubmissionService {
     examId: string,
     userId: string,
   ): Promise<StartExamResponseDto> {
+    if (!isValidObjectId(examId)) {
+      throw new NotFoundException('ID không hợp lệ')
+    }
     const exam = await this.examRepository.findById(examId)
     if (!exam) {
       throw new NotFoundException('Không tìm thấy bài thi.')
@@ -123,6 +126,9 @@ export class SubmissionService implements ISubmissionService {
     userId: string,
     submissionDto: SubmitExamDto,
   ): Promise<SubmissionResponseDto> {
+    if (!isValidObjectId(submissionId)) {
+      throw new NotFoundException('ID không hợp lệ')
+    }
     const submission = await this.submissionRepository.findById(submissionId)
 
     if (!submission) {
@@ -206,8 +212,8 @@ export class SubmissionService implements ISubmissionService {
     submissionId: string,
     userId: string,
   ): Promise<SubmissionResponseDto | null> {
-    if (!mongoose.Types.ObjectId.isValid(submissionId)) {
-      throw new BadRequestException('ID không hợp lệ.')
+    if (!isValidObjectId(submissionId)) {
+      throw new NotFoundException('ID không hợp lệ')
     }
     const submission = await this.submissionRepository.findById(submissionId)
     if (!submission) {
@@ -223,6 +229,9 @@ export class SubmissionService implements ISubmissionService {
     submissionId: string,
     userId: string,
   ): Promise<{ message: string }> {
+    if (!isValidObjectId(submissionId)) {
+      throw new NotFoundException('ID không hợp lệ')
+    }
     const submission = await this.submissionRepository.findById(submissionId)
 
     if (!submission) {

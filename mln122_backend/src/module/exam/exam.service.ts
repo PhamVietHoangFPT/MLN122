@@ -11,7 +11,7 @@ import { UpdateExamDto } from './dto/updateExam.dto'
 import { ExamResponseDto } from './dto/examResponse.dto'
 import { ExamForStudentDto } from './dto/examForStudent.dto'
 import { ExamDocument } from './schemas/exam.schema'
-import { FilterQuery } from 'mongoose'
+import { FilterQuery, isValidObjectId } from 'mongoose'
 import { ISubjectRepository } from '../subject/interfaces/isubject.repository'
 
 @Injectable()
@@ -55,6 +55,9 @@ export class ExamService implements IExamService {
   }
 
   async findById(id: string): Promise<ExamResponseDto | null> {
+    if (!isValidObjectId(id)) {
+      throw new NotFoundException('ID đề thi không hợp lệ')
+    }
     const exam = await this.examRepository.findById(id)
     if (!exam) {
       throw new NotFoundException('Đề thi không tồn tại')
@@ -87,6 +90,9 @@ export class ExamService implements IExamService {
   }
 
   async findByIdForStudent(id: string): Promise<ExamForStudentDto | null> {
+    if (!isValidObjectId(id)) {
+      throw new NotFoundException('ID đề thi không hợp lệ')
+    }
     const data = await this.examRepository.findById(id)
     if (!data) {
       throw new NotFoundException('Đề thi không tồn tại')
