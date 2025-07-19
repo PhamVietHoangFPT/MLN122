@@ -37,6 +37,8 @@ const ManageExam = lazy(() => import('../pages/Admin/ManageExam'))
 const ManageSubject = lazy(() => import('../pages/Admin/ManageSubject'))
 
 const SubjectDetail = lazy(() => import('../pages/Admin/SubjectDetail'))
+
+const ExamDetail = lazy(() => import('../pages/Admin/ExamDetail'))
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -106,6 +108,10 @@ const routes: LayoutRoute[] = [
       {
         path: '/685d54822e239adc055c4abf/subjects/:subjectId',
         component: SubjectDetail,
+      },
+      {
+        path: '/685d54822e239adc055c4abf/exams/:examId',
+        component: ExamDetail,
       },
     ],
   },
