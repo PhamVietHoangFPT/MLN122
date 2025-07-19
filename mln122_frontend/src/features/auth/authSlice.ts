@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { jwtDecode } from 'jwt-decode'
 import Cookies from 'js-cookie'

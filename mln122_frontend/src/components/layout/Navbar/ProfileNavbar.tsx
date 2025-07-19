@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { ConfigProvider, Layout, Menu } from 'antd'
 import { UserOutlined, HistoryOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'

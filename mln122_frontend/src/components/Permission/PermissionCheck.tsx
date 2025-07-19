@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 import Cookies from 'js-cookie'
 import { jwtDecode } from 'jwt-decode'
@@ -42,6 +43,7 @@ const PermissionCheck: React.FC<Props> = ({ children, protectedRole }) => {
     }
 
     return <>{children}</>
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     Cookies.remove('userToken')
     return <>{children}</> // Token sai, nhưng không redirect

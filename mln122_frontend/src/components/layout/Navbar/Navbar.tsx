@@ -39,21 +39,20 @@ const StudentProjectNavbar: React.FC = () => {
   const userData = useMemo(() => {
     const data = Cookies.get('userData')
     return data ? JSON.parse(data) : null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Cookies.get('userData')])
 
   // === Menu 1: Các mục điều hướng chính ===
-  const mainItems: MenuProps['items'] = [
+  const mainItems: Required<MenuProps>['items'] = [
     {
-      key: 'home',
+      key: '',
       icon: <HomeFilled />,
       label: 'Trang chủ',
-      url: '/',
     },
     {
       key: 'qa',
       icon: <QuestionCircleOutlined />,
       label: 'Hỏi Đáp',
-      url: '/qa',
     },
     // Thêm các mục chính khác ở đây nếu cần
   ]
@@ -78,20 +77,12 @@ const StudentProjectNavbar: React.FC = () => {
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key)
-    // Điều hướng cho menu chính
-    const targetItem = mainItems.find((item) => item.key === e.key)
-    if (targetItem && 'url' in targetItem) {
-      navigate(targetItem.url)
-    }
-  }
-
-  const onUserMenuClick: MenuProps['onClick'] = ({ key }) => {
-    if (key === 'logout') {
+    if (e.key === 'logout') {
       Cookies.remove('userData')
       Cookies.remove('userToken')
       navigate('/login')
     } else {
-      navigate(`/${key}`)
+      navigate(`/${e.key}`)
     }
   }
 
@@ -148,7 +139,7 @@ const StudentProjectNavbar: React.FC = () => {
           >
             {userData ? (
               <Dropdown
-                menu={{ items: userMenuItems, onClick: onUserMenuClick }}
+                menu={{ items: userMenuItems, onClick: onMenuClick }}
                 placement='bottomRight'
                 arrow
               >

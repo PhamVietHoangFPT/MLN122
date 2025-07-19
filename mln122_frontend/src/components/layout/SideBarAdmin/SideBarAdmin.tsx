@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -12,14 +13,10 @@ import {
 } from 'antd' // Thêm Spin
 import {
   SearchOutlined,
-  UserOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  MedicineBoxOutlined,
   BarChartOutlined,
-  AppstoreOutlined,
-  ClockCircleOutlined,
   ExperimentOutlined,
 } from '@ant-design/icons'
 import Cookies from 'js-cookie'
@@ -32,9 +29,17 @@ export const SideBar = () => {
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
 
+  // Định nghĩa kiểu cho userData
+  interface UserData {
+    picture?: string
+    fullName?: string
+    email?: string
+    [key: string]: any
+  }
+
   // Lấy userData từ cookie và decode nó
   const userDataString = Cookies.get('userData')
-  let userData = {}
+  let userData: UserData = {}
   if (userDataString) {
     try {
       // Decode URI component trước khi parse JSON
