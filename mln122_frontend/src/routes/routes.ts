@@ -39,6 +39,8 @@ const ManageSubject = lazy(() => import('../pages/Admin/ManageSubject'))
 const SubjectDetail = lazy(() => import('../pages/Admin/SubjectDetail'))
 
 const ExamDetail = lazy(() => import('../pages/Admin/ExamDetail'))
+
+const LoginError = lazy(() => import('../pages/Login/LoginError'))
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -50,6 +52,10 @@ const routes: LayoutRoute[] = [
       {
         path: '/login-success',
         component: LoginSuccess,
+      },
+      {
+        path: '/login-error',
+        component: LoginError,
       },
     ],
   },

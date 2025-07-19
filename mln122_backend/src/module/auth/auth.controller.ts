@@ -39,12 +39,12 @@ export class AuthController {
       // Chuyển hướng về địa chỉ frontend ĐÚNG
       res.redirect(`${frontendUrl}/login-success?token=${accessToken}`)
     } catch (error) {
-      let redirectUrl = `${frontendUrl}/login?error=UnknownError`
+      let redirectUrl = `${frontendUrl}/login-error?error=UnknownError`
 
       if (error instanceof ForbiddenException) {
         const errorMessage = error.message
         const encodedMessage = encodeURIComponent(errorMessage)
-        redirectUrl = `${frontendUrl}/login?error=${encodedMessage}`
+        redirectUrl = `${frontendUrl}/login-error?error=${encodedMessage}`
       }
       // Chuyển hướng về địa chỉ frontend ĐÚNG với lỗi
       res.redirect(redirectUrl)
