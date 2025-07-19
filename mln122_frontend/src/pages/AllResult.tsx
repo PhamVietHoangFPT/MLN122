@@ -86,7 +86,7 @@ export default function AllResult() {
     {
       title: 'STT',
       dataIndex: 'key',
-      render: (text, record, index) => index + 1,
+      render: (index) => index + 1,
       width: '5%',
     },
     {

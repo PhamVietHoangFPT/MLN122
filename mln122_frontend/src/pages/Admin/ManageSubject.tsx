@@ -106,7 +106,7 @@ export default function ManageSubject() {
     {
       title: 'STT',
       dataIndex: 'key',
-      render: (text, record, index) => index + 1,
+      render: (index) => index + 1,
       width: '10%',
     },
     {
