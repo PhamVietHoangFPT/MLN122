@@ -41,6 +41,8 @@ const SubjectDetail = lazy(() => import('../pages/Admin/SubjectDetail'))
 const ExamDetail = lazy(() => import('../pages/Admin/ExamDetail'))
 
 const LoginError = lazy(() => import('../pages/Login/LoginError'))
+
+const Survey = lazy(() => import('../pages/Survey'))
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -66,6 +68,10 @@ const routes: LayoutRoute[] = [
         path: '/',
         component: HomePage,
         exact: true,
+      },
+      {
+        path: '/survey',
+        component: Survey,
       },
     ],
   },
