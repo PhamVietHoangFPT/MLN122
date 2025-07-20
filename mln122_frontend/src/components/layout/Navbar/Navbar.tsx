@@ -50,9 +50,17 @@ const StudentProjectNavbar: React.FC = () => {
       label: 'Trang chủ',
     },
     {
-      key: 'qa',
+      key: 'survey',
       icon: <QuestionCircleOutlined />,
-      label: 'Hỏi Đáp',
+      label: (
+        <a
+          href='https://docs.google.com/forms/d/e/1FAIpQLSe2SnyWiza1McOEzfMpTXIDHdYVTLE2zIOE5TFelCfLqnblmA/viewform'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          Khảo sát
+        </a>
+      ),
     },
     // Thêm các mục chính khác ở đây nếu cần
   ]
