@@ -38,8 +38,8 @@ export default function ProfileNavbar() {
   return (
     <Header
       style={{
-        background: '#fff',
-        borderBottom: '1px solid #f0f0f0',
+        background: '#DA020E',
+        borderBottom: '1px solid #B8151C',
         padding: '0 50px',
         display: 'flex',
         justifyContent: 'center', // Căn giữa Menu
@@ -50,11 +50,17 @@ export default function ProfileNavbar() {
           components: {
             Menu: {
               // Màu chữ của item khi được chọn
-              itemSelectedColor: '#262626',
-              // Màu nền của item khi được chọn (đổi thành màu xám nhạt để dễ nhìn)
-              itemSelectedBg: '#f0f0f0',
+              itemSelectedColor: '#ffffff',
+              // Màu nền của item khi được chọn
+              itemSelectedBg: 'rgba(255, 255, 255, 0.1)',
+              // Màu chữ của item bình thường
+              itemColor: 'rgba(255, 255, 255, 0.85)',
+              // Màu chữ khi hover
+              itemHoverColor: '#ffffff',
+              // Màu nền khi hover
+              itemHoverBg: 'rgba(255, 255, 255, 0.1)',
 
-              colorPrimary: '#262626',
+              colorPrimary: '#ffffff',
             },
           },
         }}

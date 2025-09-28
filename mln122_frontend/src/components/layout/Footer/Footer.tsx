@@ -11,7 +11,7 @@ const StudentProjectFooter: React.FC = () => {
   return (
     <Footer
       style={{
-        background: '#262626', // Có thể dùng màu xám đậm để khác với màu xanh của FPT
+        background: '#B8151C', // Màu đỏ đậm phù hợp với chủ đề Tư tưởng Hồ Chí Minh
         padding: '40px 50px',
         color: 'rgba(255, 255, 255, 0.65)',
       }}
