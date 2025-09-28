@@ -186,7 +186,7 @@
 .nav-button:hover {
     border-color: var(--primary-red);
     background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
-    color: white !important;
+    color: red !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(218, 2, 14, 0.3);
 }
@@ -194,7 +194,7 @@
 .nav-button.active {
     border-color: var(--primary-red);
     background: linear-gradient(135deg, var(--primary-red), var(--secondary-red));
-    color: white !important;
+    color: white;
     box-shadow: 0 6px 20px rgba(218, 2, 14, 0.3);
 }
 
