@@ -68,17 +68,14 @@ const routes: LayoutRoute[] = [
     data: [
       {
         path: '/',
-        component: HomePage,
+        // component: HomePage,\
+        component: LandingPage,
         exact: true,
       },
       {
         path: '/survey',
         component: Survey,
       },
-      {
-        path: 'landing',
-        component: LandingPage,
-      }
     ],
   },
   {
