@@ -5,8 +5,8 @@ import {
   LogoutOutlined,
   HomeFilled,
   QuestionCircleOutlined,
-  BookOutlined,
 } from '@ant-design/icons'
+import hcmImage from '../../../assets/hcm.png'
 import type { MenuProps } from 'antd'
 import {
   Menu,
@@ -97,12 +97,26 @@ const StudentProjectNavbar: React.FC = () => {
   return (
     <Header
       style={{
-        background: '#fff',
+        background: '#DA020E',
         padding: '0 40px',
-        borderBottom: '1px solid #f0f0f0',
+        borderBottom: '1px solid #B8151C',
       }}
     >
-      <ConfigProvider theme={{ token: { colorPrimary: '#262626' } }}>
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary: '#ffffff' },
+          components: {
+            Menu: {
+              itemColor: '#ffffff',
+              itemHoverColor: '#ffffff',
+              itemSelectedColor: '#ffffff',
+              itemActiveBg: 'rgba(255, 255, 255, 0.1)',
+              itemHoverBg: 'rgba(255, 255, 255, 0.1)',
+              itemSelectedBg: 'rgba(255, 255, 255, 0.15)',
+            },
+          },
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -116,14 +130,17 @@ const StudentProjectNavbar: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={() => navigate('/')}
           >
-            <BookOutlined
+            <img
+              src={hcmImage}
+              alt="Hồ Chí Minh"
               style={{
-                fontSize: '28px',
-                color: '#262626',
+                width: '40px',
+                height: '38px',
                 marginRight: '12px',
+                borderRadius: '50%',
               }}
             />
-            <Title level={4} style={{ margin: 0 }}>
+            <Title level={4} style={{ margin: 0, color: '#ffffff' }}>
               Góc Học Tập FPT
             </Title>
           </div>
@@ -134,7 +151,7 @@ const StudentProjectNavbar: React.FC = () => {
             selectedKeys={[current]}
             mode='horizontal'
             items={mainItems}
-            style={{ flex: 1, borderBottom: 'none', justifyContent: 'center' }}
+            style={{ flex: 1, borderBottom: 'none', justifyContent: 'center', backgroundColor: '#DA020E' }}
           />
 
           {/* Khu vực người dùng bên phải */}
@@ -160,7 +177,7 @@ const StudentProjectNavbar: React.FC = () => {
                         <UserOutlined />
                       )}
                     </Avatar>
-                    <Text strong>{userData.fullName || 'User'}</Text>
+                    <Text strong style={{ color: '#ffffff' }}>{userData.fullName || 'User'}</Text>
                   </Space>
                 </a>
               </Dropdown>
@@ -171,7 +188,7 @@ const StudentProjectNavbar: React.FC = () => {
                 items={[
                   { key: 'login', label: 'Đăng nhập', icon: <LoginOutlined /> },
                 ]}
-                style={{ borderBottom: 'none' }}
+                style={{ borderBottom: 'none', backgroundColor: '#DA020E' }}
               />
             )}
           </div>

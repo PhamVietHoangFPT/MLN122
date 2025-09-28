@@ -6,9 +6,9 @@
 
 /* Style khi di chuột vào card */
 .subject-card.ant-card-hoverable:hover {
-  border-color: #595959;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  /* Đổ bóng nhẹ và lan tỏa hơn */
+  border-color: #DA020E;
+  box-shadow: 0 6px 16px rgba(218, 2, 14, 0.12);
+  /* Đổ bóng nhẹ và lan tỏa hơn với màu đỏ */
   transition: border-color 0.2s ease-in-out, box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
   transform: translateY(-4px);
 }
