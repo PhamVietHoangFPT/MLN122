@@ -5,8 +5,8 @@ import {
   LogoutOutlined,
   HomeFilled,
   QuestionCircleOutlined,
-  BookOutlined,
 } from '@ant-design/icons'
+import hcmImage from '../../../assets/hcm.png'
 import type { MenuProps } from 'antd'
 import {
   Menu,
@@ -130,11 +130,14 @@ const StudentProjectNavbar: React.FC = () => {
             style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={() => navigate('/')}
           >
-            <BookOutlined
+            <img
+              src={hcmImage}
+              alt="Hồ Chí Minh"
               style={{
-                fontSize: '28px',
-                color: '#ffffff',
+                width: '40px',
+                height: '38px',
                 marginRight: '12px',
+                borderRadius: '50%',
               }}
             />
             <Title level={4} style={{ margin: 0, color: '#ffffff' }}>
