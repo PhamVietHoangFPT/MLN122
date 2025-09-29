@@ -24,6 +24,8 @@ const ExamList = lazy(() => import('../pages/ExamList'))
 
 const Test = lazy(() => import('../pages/Test'))
 
+const ChatAI = lazy(() => import('../pages/ChatAI'))
+
 const Result = lazy(() => import('../pages/Result'))
 
 const Profile = lazy(() => import('../pages/Profile'))
@@ -77,8 +79,13 @@ const routes: LayoutRoute[] = [
         component: Survey,
       },
       {
+
+        path: '/chat',
+        component: ChatAI,
+
         path: '/exam',
         component: HomePage,
+
       },
     ],
   },
