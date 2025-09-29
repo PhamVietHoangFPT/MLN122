@@ -9,11 +9,8 @@ const { Header } = Layout
 export default function ProfileNavbar() {
   const navigate = useNavigate()
   const location = useLocation()
-
-  // Xác định key mặc định dựa trên URL hiện tại
   const [current, setCurrent] = useState(location.pathname)
 
-  // Cập nhật key khi URL thay đổi
   useEffect(() => {
     setCurrent(location.pathname)
   }, [location.pathname])
@@ -39,28 +36,25 @@ export default function ProfileNavbar() {
     <Header
       style={{
         background: '#DA020E',
-        borderBottom: '1px solid #B8151C',
         padding: '0 50px',
         display: 'flex',
-        justifyContent: 'center', // Căn giữa Menu
+        justifyContent: 'center',
       }}
     >
+      {/* SỬA LẠI THEME TRONG ĐÂY */}
       <ConfigProvider
         theme={{
           components: {
             Menu: {
-              // Màu chữ của item khi được chọn
-              itemSelectedColor: '#ffffff',
-              // Màu nền của item khi được chọn
-              itemSelectedBg: 'rgba(255, 255, 255, 0.1)',
-              // Màu chữ của item bình thường
-              itemColor: 'rgba(255, 255, 255, 0.85)',
-              // Màu chữ khi hover
-              itemHoverColor: '#ffffff',
-              // Màu nền khi hover
-              itemHoverBg: 'rgba(255, 255, 255, 0.1)',
+              colorBgContainer: '#DA020E',
+              itemColor: '#FFFFFF',
+              itemSelectedColor: '#FFFFFF',
+              horizontalItemSelectedColor: '#FFFFFF',
+              itemHoverColor: '#FFFFFF', // Giữ màu chữ trắng khi hover
 
-              colorPrimary: '#ffffff',
+              // ✨ SỬA Ở ĐÂY: Đổi màu nền cho trạng thái hover và selected
+              itemHoverBg: '#B8151C', // Nền khi di chuột qua -> ĐỎ ĐẬM
+              itemSelectedBg: '#B8151C', // Nền khi được chọn -> ĐỎ ĐẬM
             },
           },
         }}
@@ -70,7 +64,13 @@ export default function ProfileNavbar() {
           selectedKeys={[current]}
           mode='horizontal'
           items={items}
-          style={{ lineHeight: '62px', borderBottom: 'none' }} // Chỉnh lại line-height và bỏ viền
+          style={{
+            lineHeight: '62px',
+            borderBottom: 'none',
+            // Thêm minWidth để Menu không bị co lại quá nhỏ
+            minWidth: '300px',
+            justifyContent: 'center', // Căn giữa các item trong Menu
+          }}
         />
       </ConfigProvider>
     </Header>

@@ -5,7 +5,11 @@ import {
   LogoutOutlined,
   HomeFilled,
   QuestionCircleOutlined,
+
   MessageOutlined,
+
+  BookOutlined,
+
 } from '@ant-design/icons'
 import hcmImage from '../../../assets/hcm.png'
 import type { MenuProps } from 'antd'
@@ -51,9 +55,15 @@ const StudentProjectNavbar: React.FC = () => {
       label: 'Trang chủ',
     },
     {
+
       key: 'chat',
       icon: <MessageOutlined />,
       label: 'Chat cùng AI',
+
+      key: 'exam',
+      icon: <BookOutlined />,
+      label: 'Danh sách đề thi',
+
     },
     {
       key: 'survey',
@@ -105,7 +115,6 @@ const StudentProjectNavbar: React.FC = () => {
       style={{
         background: '#DA020E',
         padding: '0 40px',
-        borderBottom: '1px solid #B8151C',
       }}
     >
       <ConfigProvider
