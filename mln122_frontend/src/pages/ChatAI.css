@@ -132,13 +132,13 @@
 }
 
 .input-textarea:focus {
-  border-color: #fb923c;
+  border-color: red;
   box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.2);
 }
 
 .send-button {
-  background-color: #ff6b35;
-  border-color: #ff6b35;
+  background-color: red;
+  border-color: red;
   color: white;
   height: 40px;
   border-radius: 0.75rem;
@@ -146,8 +146,8 @@
 }
 
 .send-button:hover {
-  background-color: #e55a2b;
-  border-color: #e55a2b;
+  background-color: red;
+  border-color: red;
 }
 
 .send-button:disabled {
@@ -157,7 +157,7 @@
 }
 
 .avatar {
-  background-color: #ff6b35;
+  background-color: red;
   color: white;
   font-weight: bold;
 }
