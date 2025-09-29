@@ -105,7 +105,6 @@ const StudentProjectNavbar: React.FC = () => {
       style={{
         background: '#DA020E',
         padding: '0 40px',
-        borderBottom: '1px solid #B8151C',
       }}
     >
       <ConfigProvider

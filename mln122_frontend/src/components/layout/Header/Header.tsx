@@ -8,7 +8,7 @@ const CustomHeader: React.FC = () => {
     <Header
       style={{
         // Áp dụng style nền tối từ footer
-        background: '#262626',
+        background: '#c81821', // Màu nền đỏ đậm
         padding: '40px 40px',
         display: 'flex',
         alignItems: 'center',
