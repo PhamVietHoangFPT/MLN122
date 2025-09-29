@@ -165,7 +165,7 @@ export default function ChatBox() {
             messages[messages.length - 1]?.sender === 'model' &&
             messages[messages.length - 1]?.content === '' && (
               <div className='loading-container'>
-                <Avatar style={{ backgroundColor: '#ff6b35' }} size={40}>
+                <Avatar style={{ backgroundColor: 'red' }} size={40}>
                   AI
                 </Avatar>
                 <div className='loading-box'>
