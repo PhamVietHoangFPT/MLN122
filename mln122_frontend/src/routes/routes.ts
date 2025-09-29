@@ -79,13 +79,12 @@ const routes: LayoutRoute[] = [
         component: Survey,
       },
       {
-
         path: '/chat',
         component: ChatAI,
-
+      },
+      {
         path: '/exam',
         component: HomePage,
-
       },
     ],
   },
