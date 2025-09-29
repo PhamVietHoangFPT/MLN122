@@ -76,6 +76,10 @@ const routes: LayoutRoute[] = [
         path: '/survey',
         component: Survey,
       },
+      {
+        path: '/exam',
+        component: HomePage,
+      },
     ],
   },
   {
