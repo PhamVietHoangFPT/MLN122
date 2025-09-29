@@ -5,6 +5,7 @@ import {
   LogoutOutlined,
   HomeFilled,
   QuestionCircleOutlined,
+  MessageOutlined,
 } from '@ant-design/icons'
 import hcmImage from '../../../assets/hcm.png'
 import type { MenuProps } from 'antd'
@@ -48,6 +49,11 @@ const StudentProjectNavbar: React.FC = () => {
       key: '',
       icon: <HomeFilled />,
       label: 'Trang chủ',
+    },
+    {
+      key: 'chat',
+      icon: <MessageOutlined />,
+      label: 'Chat cùng AI',
     },
     {
       key: 'survey',
@@ -132,7 +138,7 @@ const StudentProjectNavbar: React.FC = () => {
           >
             <img
               src={hcmImage}
-              alt="Hồ Chí Minh"
+              alt='Hồ Chí Minh'
               style={{
                 width: '40px',
                 height: '38px',
@@ -151,7 +157,12 @@ const StudentProjectNavbar: React.FC = () => {
             selectedKeys={[current]}
             mode='horizontal'
             items={mainItems}
-            style={{ flex: 1, borderBottom: 'none', justifyContent: 'center', backgroundColor: '#DA020E' }}
+            style={{
+              flex: 1,
+              borderBottom: 'none',
+              justifyContent: 'center',
+              backgroundColor: '#DA020E',
+            }}
           />
 
           {/* Khu vực người dùng bên phải */}
@@ -177,7 +188,9 @@ const StudentProjectNavbar: React.FC = () => {
                         <UserOutlined />
                       )}
                     </Avatar>
-                    <Text strong style={{ color: '#ffffff' }}>{userData.fullName || 'User'}</Text>
+                    <Text strong style={{ color: '#ffffff' }}>
+                      {userData.fullName || 'User'}
+                    </Text>
                   </Space>
                 </a>
               </Dropdown>
