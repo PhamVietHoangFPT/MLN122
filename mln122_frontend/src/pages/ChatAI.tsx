@@ -46,6 +46,7 @@ export default function ChatBox() {
 
   const genAI = useRef<GoogleGenerativeAI | null>(null)
   const modelRef = useRef<GenerativeModel | null>(null)
+  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   // Khởi tạo AI model và cấu hình
   useEffect(() => {
@@ -63,6 +64,14 @@ export default function ChatBox() {
       systemInstruction: SYSTEM_INSTRUCTION,
     })
   }, [])
+
+  // Auto scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight
+    }
+  }, [messages, isLoading])
 
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return
@@ -137,7 +146,7 @@ export default function ChatBox() {
     <div className='chat-container'>
       <div className='chat-box'>
         {/* Messages */}
-        <div className='messages-container'>
+        <div className='messages-container' ref={messagesContainerRef}>
           {/* Welcome message - always show */}
           <div className='welcome-message'>
             <Avatar style={{ backgroundColor: 'red' }} size={40}>

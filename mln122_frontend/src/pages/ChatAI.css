@@ -1,7 +1,6 @@
 /* ChatAI Component Styles */
 
 .chat-container {
-  min-height: 100vh;
   background-color: #f9fafb;
   display: flex;
   align-items: center;
