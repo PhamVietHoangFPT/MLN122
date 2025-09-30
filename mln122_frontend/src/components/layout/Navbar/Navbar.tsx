@@ -61,19 +61,19 @@ const StudentProjectNavbar: React.FC = () => {
       icon: <BookOutlined />,
       label: 'Danh sách đề thi',
     },
-    {
-      key: 'survey',
-      icon: <QuestionCircleOutlined />,
-      label: (
-        <a
-          href='https://docs.google.com/forms/d/e/1FAIpQLSe2SnyWiza1McOEzfMpTXIDHdYVTLE2zIOE5TFelCfLqnblmA/viewform'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Khảo sát
-        </a>
-      ),
-    },
+    // {
+    //   key: 'survey',
+    //   icon: <QuestionCircleOutlined />,
+    //   label: (
+    //     <a
+    //       href='https://docs.google.com/forms/d/e/1FAIpQLSe2SnyWiza1McOEzfMpTXIDHdYVTLE2zIOE5TFelCfLqnblmA/viewform'
+    //       target='_blank'
+    //       rel='noopener noreferrer'
+    //     >
+    //       Khảo sát
+    //     </a>
+    //   ),
+    // },
     // Thêm các mục chính khác ở đây nếu cần
   ]
 
