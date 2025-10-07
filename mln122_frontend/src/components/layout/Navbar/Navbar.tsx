@@ -59,7 +59,7 @@ const StudentProjectNavbar: React.FC = () => {
     {
       key: 'exam',
       icon: <BookOutlined />,
-      label: 'Danh sách đề thi',
+      label: 'Danh sách đề thi thử',
     },
     // {
     //   key: 'survey',

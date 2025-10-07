@@ -127,7 +127,7 @@ export default function ExamList() {
             level={2}
             style={{ textAlign: 'center', marginBottom: '24px' }}
           >
-            Danh sách đề thi
+            Danh sách đề thi thử
           </Title>
           {renderContent()}
         </Card>
