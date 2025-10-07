@@ -66,7 +66,7 @@ export default function ChatBox() {
     genAI.current = new GoogleGenerativeAI(apiKey)
 
     modelRef.current = genAI.current.getGenerativeModel({
-      model: 'gemini-1.5-flash', // Sử dụng model mới hơn nếu có
+      model: 'gemini-2.5-flash', // Sử dụng model mới hơn nếu có
       generationConfig: GENERATION_CONFIG,
       systemInstruction: SYSTEM_INSTRUCTION,
     })
