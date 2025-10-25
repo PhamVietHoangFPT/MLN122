@@ -24,7 +24,7 @@
 
 /* Class 'is-flipped' sẽ được thêm bằng React để xoay 180 độ */
 .flip-card-inner.is-flipped {
-  transform: rotateY(180deg);
+  transform: rotateX(180deg);
 }
 
 /* Định dạng chung cho 2 mặt trước và sau */
@@ -50,7 +50,7 @@
 
 /* Mặt sau: Xoay 180 độ ngay từ đầu */
 .flip-card-back {
-  transform: rotateY(180deg);
+  transform: rotateX(180deg);
 }
 
 /* --- THÊM MỚI: CSS CHO HIỆU ỨNG TRƯỢT --- */
