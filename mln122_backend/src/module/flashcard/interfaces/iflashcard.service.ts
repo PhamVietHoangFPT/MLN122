@@ -4,8 +4,8 @@ import {
   FindFlashcardsQueryDto,
   MinimalFlashcardResponseDto,
 } from '../dto/flashcard.dto'
-import { FlashcardDocument } from '../schemas/Flashcard.schema'
 import { FilterQuery } from 'mongoose'
+import { FlashcardDocument } from '../schemas/flashcard.schema'
 
 export interface IFlashcardService {
   create(
