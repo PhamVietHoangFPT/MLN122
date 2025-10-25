@@ -46,7 +46,11 @@ const LoginError = lazy(() => import('../pages/Login/LoginError'))
 
 const LandingPage = lazy(() => import('../pages/LandingPage'))
 
-const Survey = lazy(() => import('../pages/Survey'))
+const Flashcard = lazy(() => import('../pages/Flashcard'))
+
+const FlashcardDetail = lazy(() => import('../pages/FlashcardDetail'))
+
+const FlashcardPage = lazy(() => import('../pages/FlashcardPage'))
 const routes: LayoutRoute[] = [
   {
     layout: LoginRegisterLayout,
@@ -75,8 +79,16 @@ const routes: LayoutRoute[] = [
         exact: true,
       },
       {
-        path: '/survey',
-        component: Survey,
+        path: '/flashcard',
+        component: Flashcard,
+      },
+      {
+        path: '/flashcard/:subjectId',
+        component: FlashcardDetail,
+      },
+      {
+        path: '/flashcard/flashcard-detail/:flashcardId',
+        component: FlashcardPage,
       },
       {
         path: '/chat',

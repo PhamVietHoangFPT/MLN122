@@ -9,6 +9,7 @@ import { SubjectModule } from './module/subject/subject.module'
 import { ExamModule } from './module/exam/exam.module'
 import { SubmissionModule } from './module/submission/submission.module'
 import { ScheduleModule } from '@nestjs/schedule'
+import { FlashcardModule } from './module/flashcard/flashcard.module'
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule'
     SubjectModule,
     ExamModule,
     SubmissionModule,
+    FlashcardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

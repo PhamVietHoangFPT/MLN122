@@ -78,13 +78,18 @@
   font-size: 0.875rem;
   line-height: 1.6;
   word-break: break-word;
+  background-color: #f3f4f6;
+  border-radius: 1rem;
+  border-top-left-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .ai-message-box {
   background-color: #f3f4f6;
   border-radius: 1rem;
   border-top-left-radius: 0.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 

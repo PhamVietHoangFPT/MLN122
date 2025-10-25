@@ -4,9 +4,9 @@ import {
   UserOutlined,
   LogoutOutlined,
   HomeFilled,
-  // QuestionCircleOutlined,
   MessageOutlined,
   BookOutlined,
+  AuditOutlined,
 } from '@ant-design/icons'
 import hcmImage from '../../../assets/hcm.png'
 import type { MenuProps } from 'antd'
@@ -61,19 +61,11 @@ const StudentProjectNavbar: React.FC = () => {
       icon: <BookOutlined />,
       label: 'Danh sách đề thi thử',
     },
-    // {
-    //   key: 'survey',
-    //   icon: <QuestionCircleOutlined />,
-    //   label: (
-    //     <a
-    //       href='https://docs.google.com/forms/d/e/1FAIpQLSe2SnyWiza1McOEzfMpTXIDHdYVTLE2zIOE5TFelCfLqnblmA/viewform'
-    //       target='_blank'
-    //       rel='noopener noreferrer'
-    //     >
-    //       Khảo sát
-    //     </a>
-    //   ),
-    // },
+    {
+      key: 'flashcard',
+      icon: <AuditOutlined />,
+      label: 'Flashcard học tập',
+    },
     // Thêm các mục chính khác ở đây nếu cần
   ]
 
