@@ -15,6 +15,12 @@ const CustomHeader: React.FC = () => {
         justifyContent: 'center',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)', // Tăng nhẹ shadow trên nền tối
         height: 'auto',
+        position: 'fixed',
+        top: 64, // Position below Navbar
+        left: 0,
+        right: 0,
+        zIndex: 10000,
+        width: '100%',
       }}
     >
       <div

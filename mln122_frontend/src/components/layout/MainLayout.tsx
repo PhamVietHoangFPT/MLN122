@@ -2,7 +2,6 @@ import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
 const { Content } = Layout
 import AppFooter from './Footer/Footer'
-import AppHeader from './Header/Header'
 import Navbar from './Navbar/Navbar'
 
 function MainLayout() {
@@ -11,14 +10,16 @@ function MainLayout() {
       style={{
         minHeight: '100vh',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
       <Navbar />
-      <AppHeader />
       <Content
         style={{
           padding: '50px',
           paddingTop: '30px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <Outlet />
