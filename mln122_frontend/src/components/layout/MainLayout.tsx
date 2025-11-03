@@ -1,17 +1,10 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
 const { Content } = Layout
 import AppFooter from './Footer/Footer'
-import AppHeader from './Header/Header'
 import Navbar from './Navbar/Navbar'
 
 function MainLayout() {
-  const location = useLocation()
-  const isLandingPage = location.pathname === '/' || location.pathname === ''
-  const isChatPage =
-    location.pathname === '/chat' || location.pathname.startsWith('/chat/')
-  const shouldShowHeader = !isLandingPage && !isChatPage
-
   return (
     <Layout
       style={{
@@ -21,13 +14,13 @@ function MainLayout() {
       }}
     >
       <Navbar />
-      {shouldShowHeader && <AppHeader />}
       <Content
         style={{
           padding: '50px',
-          paddingTop: '30px',
+          paddingTop: '80px', // Account for Navbar (64px) + spacing (16px)
           position: 'relative',
           zIndex: 1,
+          marginTop: 0,
         }}
       >
         <Outlet />

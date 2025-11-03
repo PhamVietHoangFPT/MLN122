@@ -107,11 +107,11 @@ const VietnamFlagIcon: React.FC<{ size?: number; className?: string }> = ({
 
 // Floating Flags Component
 const FloatingFlags: React.FC = () => {
-  const flags = Array.from({ length: 15 }, (_, i) => ({
+  const flags = Array.from({ length: 20 }, (_, i) => ({
     id: i,
     left: Math.random() * 100,
     delay: Math.random() * 20,
-    duration: 15 + Math.random() * 10,
+    duration: 5 + Math.random() * 10,
   }))
 
   return (

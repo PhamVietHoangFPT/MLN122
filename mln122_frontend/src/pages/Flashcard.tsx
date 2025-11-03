@@ -16,9 +16,23 @@ export default function Flashcard() {
   }
 
   return (
-    <Layout>
-      <Content style={{ padding: '24px 50px' }}>
-        <Title level={2} style={{ marginBottom: '24px', textAlign: 'center' }}>
+    <Layout style={{ minHeight: 'auto', marginTop: 0 }}>
+      <Content
+        style={{
+          padding: '34px 50px',
+          paddingTop: '48px', // Account for Navbar (64px) + spacing (16px)
+          paddingBottom: '24px', // Reduced bottom padding
+          minHeight: 'auto',
+        }}
+      >
+        <Title
+          level={2}
+          style={{
+            marginBottom: '24px',
+            textAlign: 'center',
+            marginTop: '0', // Remove margin-top since we have padding-top
+          }}
+        >
           Chọn môn học để bắt đầu
         </Title>
         <List

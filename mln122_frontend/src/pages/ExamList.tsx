@@ -110,10 +110,17 @@ export default function ExamList() {
         display: 'flex',
         justifyContent: 'center',
         background: '#f0f2f5',
+        minHeight: 'calc(100vh - 64px)',
+        marginTop: 0,
       }}
     >
       <Content
-        style={{ display: 'flex', justifyContent: 'center', padding: '24px' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '24px',
+          paddingTop: '80px', // Account for Navbar (64px) + spacing (16px)
+        }}
       >
         <Card
           style={{
@@ -125,7 +132,11 @@ export default function ExamList() {
         >
           <Title
             level={2}
-            style={{ textAlign: 'center', marginBottom: '24px' }}
+            style={{
+              textAlign: 'center',
+              marginBottom: '24px',
+              marginTop: '0', // Remove margin-top since we have padding-top
+            }}
           >
             Danh sách đề thi thử
           </Title>
