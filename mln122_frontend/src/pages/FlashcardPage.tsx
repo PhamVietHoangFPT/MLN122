@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React, { useState, useEffect, useMemo } from 'react'
+// BƯỚC 1: Thêm 'useCallback'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { useGetflashcardByIdQuery } from '../features/flashcardAPI'
 import { useParams } from 'react-router-dom'
 import {
@@ -206,10 +207,88 @@ export default function FlashcardPage() {
         progressPercent: percent,
       }
     }, [flashcardData, currentIndex, setCurrentIndex]) // Thêm setCurrentIndex
+
   useEffect(() => {
     setJumpValue(currentIndex + 1)
   }, [currentIndex])
 
+  // --- Các hàm xử lý sự kiện ---
+
+  // BƯỚC 2: Bọc các hàm xử lý sự kiện trong useCallback
+  const handleNext = useCallback(() => {
+    if (currentIndex < totalQuestions - 1) {
+      setSlideDirection('right')
+      setCurrentIndex((prev) => prev + 1)
+      setIsFlipped(false) // Tự động lật về mặt câu hỏi khi chuyển
+    }
+  }, [
+    currentIndex,
+    totalQuestions,
+    setSlideDirection,
+    setCurrentIndex,
+    setIsFlipped,
+  ])
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) {
+      setSlideDirection('left')
+      setCurrentIndex((prev) => prev - 1)
+      setIsFlipped(false) // Tự động lật về mặt câu hỏi khi chuyển
+    }
+  }, [currentIndex, setSlideDirection, setCurrentIndex, setIsFlipped])
+
+  const handleFlip = useCallback(() => {
+    setIsFlipped((prev) => !prev)
+  }, [setIsFlipped])
+
+  // BƯỚC 3: Thêm useEffect lắng nghe bàn phím
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Kiểm tra xem người dùng có đang gõ trong ô InputNumber không
+      if (
+        event.target instanceof HTMLElement &&
+        event.target.closest('.ant-input-number')
+      ) {
+        // Nếu là phím Trái/Phải/Space, cho phép người dùng chỉnh sửa input
+        // (Hoặc nếu là Enter thì hàm onBlur/onPressEnter của InputNumber sẽ xử lý)
+        if (
+          event.key === 'ArrowLeft' ||
+          event.key === 'ArrowRight' ||
+          event.key === ' '
+        ) {
+          return
+        }
+      }
+
+      // Xử lý các phím
+      switch (event.key) {
+        case 'ArrowRight':
+          event.preventDefault() // Ngăn trình duyệt cuộn trang
+          handleNext()
+          break
+        case 'ArrowLeft':
+          event.preventDefault() // Ngăn trình duyệt cuộn trang
+          handlePrev()
+          break
+        case ' ': // Phím Space
+          event.preventDefault() // Ngăn trình duyệt cuộn trang
+          handleFlip()
+          break
+        default:
+          break
+      }
+    }
+
+    // Đăng ký listener khi component mount
+    document.addEventListener('keydown', handleKeyDown)
+
+    // Hủy đăng ký listener khi component unmount
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleNext, handlePrev, handleFlip]) // Phụ thuộc vào các hàm đã ổn định
+
+  // --- Các hàm xử lý nhảy câu ---
   const handleJumpChange = (value: number | null) => {
     setJumpValue(value)
   }
@@ -228,26 +307,6 @@ export default function FlashcardPage() {
       // reset ô input về giá trị của câu hiện tại
       setJumpValue(currentIndex + 1)
     }
-  }
-  // --- Các hàm xử lý sự kiện ---
-  const handleNext = () => {
-    if (currentIndex < totalQuestions - 1) {
-      setSlideDirection('right') // <-- THÊM DÒNG NÀY
-      setCurrentIndex((prev) => prev + 1)
-      setIsFlipped(false) // Tự động lật về mặt câu hỏi khi chuyển
-    }
-  }
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setSlideDirection('left') // <-- THÊM DÒNG NÀY
-      setCurrentIndex((prev) => prev - 1)
-      setIsFlipped(false) // Tự động lật về mặt câu hỏi khi chuyển
-    }
-  }
-
-  const handleFlip = () => {
-    setIsFlipped((prev) => !prev)
   }
 
   // --- Xử lý trạng thái Loading và Lỗi ---
@@ -324,7 +383,7 @@ export default function FlashcardPage() {
               max={totalQuestions}
               step={1}
               controls={false} // Ẩn nút mũi tên tăng/giảm cho gọn
-              style={{ width: '5  0px ', textAlign: 'center' }}
+              style={{ width: '50px', textAlign: 'center' }}
             />
             <Typography.Text style={{ paddingLeft: '8px' }}>
               / {totalQuestions}
