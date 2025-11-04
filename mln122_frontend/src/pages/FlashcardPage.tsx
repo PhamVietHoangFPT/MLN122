@@ -515,13 +515,13 @@ export default function FlashcardPage() {
       >
         <Space direction='vertical' size='small'>
           <Typography.Text>
-            <Typography.Text kbd>←</Typography.Text> : Câu trước
+            <Typography.Text>←</Typography.Text> : Câu trước
           </Typography.Text>
           <Typography.Text>
-            <Typography.Text kbd>→</Typography.Text> : Câu sau
+            <Typography.Text>→</Typography.Text> : Câu sau
           </Typography.Text>
           <Typography.Text>
-            <Typography.Text kbd>Space</Typography.Text> : Lật thẻ
+            <Typography.Text>Space</Typography.Text> : Lật thẻ
           </Typography.Text>
         </Space>
       </Card>
