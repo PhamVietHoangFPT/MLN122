@@ -497,6 +497,34 @@ export default function FlashcardPage() {
           </Row>
         </Space>
       </Col>
+      <Card
+        size='small'
+        title={
+          <Typography.Title level={5} style={{ margin: 0 }}>
+            Phím tắt
+          </Typography.Title>
+        }
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          zIndex: 10, // Đảm bảo nó nổi lên trên các thành phần khác
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)', // Thêm bóng đổ cho đẹp
+          minWidth: 150, // Đặt chiều rộng tối thiểu
+        }}
+      >
+        <Space direction='vertical' size='small'>
+          <Typography.Text>
+            <Typography.Text kbd>←</Typography.Text> : Câu trước
+          </Typography.Text>
+          <Typography.Text>
+            <Typography.Text kbd>→</Typography.Text> : Câu sau
+          </Typography.Text>
+          <Typography.Text>
+            <Typography.Text kbd>Space</Typography.Text> : Lật thẻ
+          </Typography.Text>
+        </Space>
+      </Card>
     </Row>
   )
 }
